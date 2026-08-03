@@ -1,6 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Planora
+**A Desktop-First Developer Work Tracking Workbench**
 
-## Getting Started
+Planora is a lightweight, browser-based personal productivity tool built for developers.
+It bridges the gap between simple task planning and real work execution by combining structured task management with a task-bound Pomodoro focus timer.
+
+Traditional todo tools only record plans, and standalone Pomodoro apps have no task context.
+Planora solves this problem by binding every focus session to a specific work item, helping developers track real time investment, record daily work trajectories, and complete efficient work review with fully private local storage.
+
+## ✨ Core Features
+- **Structured Task Management**
+  Create, edit, delete and complete work tasks with title, notes, deadline, and three-level priority (Low / Medium / High) with visual color distinction.
+
+- **Task-Bound Pomodoro Timer (Core Highlight)**
+  Start focus timing only after selecting a specific task. All focus records are bound to the corresponding task to track real work cost.
+
+- **Customizable Focus Mode**
+  Default 25min focus + 5min break, supports freely adjustable duration.
+
+- **Task Filter System**
+  Sidebar navigation for quick filtering: All Tasks / Pending / Completed.
+
+- **Private Local Persistence**
+  All tasks and timing records saved in browser LocalStorage, no login required, fully private data.
+
+- **Modern Desktop-First UI**
+  Built with shadcn/ui Nova dark theme, clean minimalist interface with basic responsive adaptation.
+
+## 🛠 Tech Stack
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4
+- **UI Library**: shadcn/ui (Nova Theme) + Lucide Icons
+- **Storage**: Browser LocalStorage
+- **Deployment**: Vercel
+
+## 🚀 Getting Started
 
 First, run the development server:
 
@@ -12,25 +46,3 @@ yarn dev
 pnpm dev
 # or
 bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
