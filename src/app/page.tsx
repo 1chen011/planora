@@ -1,65 +1,117 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { AppSidebar } from "@/components/app-sidebar";
+import { TaskList } from "@/components/task-list";
+import { TaskFormDialog } from "@/components/task-form-dialog";
+import { PomodoroTimer } from "@/components/pomodoro-timer";
+import { useTasks } from "@/hooks/use-tasks";
+import { usePomodoro } from "@/hooks/use-pomodoro";
+import type { Task, TaskFilter } from "@/types/task";
 
 export default function Home() {
+  const {
+    tasks,
+    hydrated,
+    counts,
+    addTask,
+    updateTask,
+    deleteTask,
+    toggleComplete,
+    filterTasks,
+  } = useTasks();
+
+  const pomodoro = usePomodoro(tasks);
+
+  const [filter, setFilter] = useState<TaskFilter>("all");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+
+  // toast on natural phase completion (distinct from manual stop)
+  useEffect(() => {
+    if (!pomodoro.lastEvent || pomodoro.lastEvent.type !== "completed") return;
+    const justFinishedFocus = pomodoro.lastEvent.phase === "focus";
+    toast.success(
+      justFinishedFocus ? "专注时段结束，去休息一下吧" : "休息结束，可以开始下一段专注了",
+      { description: justFinishedFocus ? "本次投入已记录到任务" : undefined }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pomodoro.lastEvent]);
+
+  function openAddDialog() {
+    setEditingTask(null);
+    setDialogOpen(true);
+  }
+
+  function openEditDialog(task: Task) {
+    setEditingTask(task);
+    setDialogOpen(true);
+  }
+
+  function handleSubmit(values: Parameters<typeof addTask>[0]) {
+    if (editingTask) {
+      updateTask(editingTask.id, values);
+      toast.success("任务已更新");
+    } else {
+      addTask(values);
+      toast.success("任务已创建");
+    }
+  }
+
+  function handleDelete(id: string) {
+    deleteTask(id);
+    if (pomodoro.selectedTaskId === id) {
+      pomodoro.selectTask(null);
+    }
+    toast("任务已删除");
+  }
+
+  const activeTasks = tasks.filter((t) => !t.completed);
+
+  if (!hydrated) {
+    return (
+      <div className="flex h-dvh items-center justify-center text-sm text-muted-foreground">
+        正在加载本地数据…
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="flex h-dvh w-full overflow-hidden">
+      <AppSidebar
+        filter={filter}
+        onFilterChange={setFilter}
+        counts={counts}
+        todayFocusMinutes={Math.round(
+          pomodoro.todaySessions
+            .filter((s) => s.phase === "focus")
+            .reduce((sum, s) => sum + s.elapsedSeconds, 0) / 60
+        )}
+      />
+
+      <main className="min-w-0 flex-1">
+        <TaskList
+          filter={filter}
+          tasks={filterTasks(filter)}
+          timerTaskId={pomodoro.selectedTaskId}
+          totalSecondsForTask={pomodoro.totalSecondsForTask}
+          onAddClick={openAddDialog}
+          onEdit={openEditDialog}
+          onDelete={handleDelete}
+          onToggleComplete={toggleComplete}
+          onSelectForTimer={pomodoro.selectTask}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
       </main>
+
+      <PomodoroTimer pomodoro={pomodoro} activeTasks={activeTasks} />
+
+      <TaskFormDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        editingTask={editingTask}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 }
