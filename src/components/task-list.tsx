@@ -1,21 +1,13 @@
 "use client";
 
 import { ClipboardList, Plus } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { TaskCard } from "@/components/task-card";
+
+import { useLanguage } from "@/i18n/language-context";
+
 import type { Task, TaskFilter } from "@/types/task";
-
-const FILTER_TITLE: Record<TaskFilter, string> = {
-  all: "全部任务",
-  active: "待完成",
-  completed: "已完成",
-};
-
-const EMPTY_HINT: Record<TaskFilter, string> = {
-  all: "还没有任务，创建第一条待办开始今天的工作吧。",
-  active: "没有待完成的任务，喘口气或者去规划下一步。",
-  completed: "还没有已完成的任务，完成后会出现在这里。",
-};
 
 export function TaskList({
   filter,
@@ -38,18 +30,39 @@ export function TaskList({
   onToggleComplete: (id: string) => void;
   onSelectForTimer: (id: string) => void;
 }) {
+  const { t } = useLanguage();
+
+  const filterTitle: Record<TaskFilter, string> = {
+    all: t.taskList.titles.all,
+    active: t.taskList.titles.active,
+    completed: t.taskList.titles.completed,
+  };
+
+  const emptyHint: Record<TaskFilter, string> = {
+    all: t.taskList.empty.all,
+    active: t.taskList.empty.active,
+    completed: t.taskList.empty.completed,
+  };
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div>
-          <h1 className="text-base font-semibold">{FILTER_TITLE[filter]}</h1>
+          <h1 className="text-base font-semibold">
+            {filterTitle[filter]}
+          </h1>
+
           <p className="text-xs text-muted-foreground">
-            {tasks.length} 项{filter === "active" ? "待处理" : "记录"}
+            {tasks.length}{" "}
+            {filter === "active"
+              ? t.taskList.activeSubtitle
+              : t.taskList.recordSubtitle}
           </p>
         </div>
+
         <Button onClick={onAddClick} size="sm">
           <Plus className="size-4" />
-          新增任务
+          {t.taskList.addTask}
         </Button>
       </div>
 
@@ -57,7 +70,10 @@ export function TaskList({
         {tasks.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-muted-foreground">
             <ClipboardList className="size-8 opacity-40" />
-            <p className="max-w-xs text-sm">{EMPTY_HINT[filter]}</p>
+
+            <p className="max-w-xs text-sm">
+              {emptyHint[filter]}
+            </p>
           </div>
         ) : (
           <div className="flex flex-col gap-2">

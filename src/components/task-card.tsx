@@ -1,29 +1,77 @@
 "use client";
 
-import { CalendarClock, Pencil, Timer, Trash2 } from "lucide-react";
+import {
+  CalendarClock,
+  Pencil,
+  Timer,
+  Trash2,
+} from "lucide-react";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { PriorityBadge } from "@/components/priority-badge";
+
+import { useLanguage } from "@/i18n/language-context";
+
 import { cn } from "@/lib/utils";
+
+import type { Language } from "@/i18n/translation";
 import type { Task } from "@/types/task";
 
-function formatDeadline(deadline: string) {
+function formatDeadline(
+  deadline: string,
+  language: Language
+) {
   if (!deadline) return null;
-  const d = new Date(deadline);
-  if (Number.isNaN(d.getTime())) return null;
-  const overdue = d < new Date(new Date().toDateString());
+
+  const date = new Date(deadline);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  const today = new Date();
+
+  today.setHours(0, 0, 0, 0);
+
+  const overdue = date < today;
+
   return {
-    label: d.toLocaleDateString("zh-CN", { month: "short", day: "numeric" }),
+    label: date.toLocaleDateString(
+      language === "zh" ? "zh-CN" : "en-US",
+      {
+        month: "short",
+        day: "numeric",
+      }
+    ),
     overdue,
   };
 }
 
-function formatMinutes(totalSeconds: number) {
+function formatFocusedTime(
+  totalSeconds: number,
+  language: Language
+) {
   const minutes = Math.round(totalSeconds / 60);
-  if (minutes < 60) return `${minutes} 分钟`;
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return m === 0 ? `${h} 小时` : `${h} 小时 ${m} 分钟`;
+
+  if (minutes < 60) {
+    return language === "zh"
+      ? `${minutes} 分钟`
+      : `${minutes} min`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+
+  if (language === "zh") {
+    return remainingMinutes === 0
+      ? `${hours} 小时`
+      : `${hours} 小时 ${remainingMinutes} 分钟`;
+  }
+
+  return remainingMinutes === 0
+    ? `${hours} hr`
+    : `${hours} hr ${remainingMinutes} min`;
 }
 
 export function TaskCard({
@@ -43,21 +91,32 @@ export function TaskCard({
   onDelete: (id: string) => void;
   onSelectForTimer: (id: string) => void;
 }) {
-  const deadline = formatDeadline(task.deadline);
+  const {
+    language,
+    t,
+  } = useLanguage();
+
+  const deadline = formatDeadline(
+    task.deadline,
+    language
+  );
 
   return (
     <div
       className={cn(
         "group flex items-start gap-3 rounded-lg border border-border bg-card px-3.5 py-3 transition-colors",
-        isTimerTarget && "border-primary/50 ring-1 ring-primary/30",
+        isTimerTarget &&
+          "border-primary/50 ring-1 ring-primary/30",
         task.completed && "opacity-60"
       )}
     >
       <Checkbox
         checked={task.completed}
-        onCheckedChange={() => onToggleComplete(task.id)}
+        onCheckedChange={() =>
+          onToggleComplete(task.id)
+        }
         className="mt-1"
-        aria-label="切换完成状态"
+        aria-label={t.task.toggleComplete}
       />
 
       <div className="min-w-0 flex-1">
@@ -65,15 +124,20 @@ export function TaskCard({
           <p
             className={cn(
               "truncate text-sm font-medium",
-              task.completed && "line-through text-muted-foreground"
+              task.completed &&
+                "line-through text-muted-foreground"
             )}
           >
             {task.title}
           </p>
-          <PriorityBadge priority={task.priority} />
+
+          <PriorityBadge
+            priority={task.priority}
+          />
+
           {isTimerTarget && (
             <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-medium text-primary">
-              计时中
+              {t.task.timerTarget}
             </span>
           )}
         </div>
@@ -89,17 +153,33 @@ export function TaskCard({
             <span
               className={cn(
                 "flex items-center gap-1",
-                deadline.overdue && !task.completed && "text-destructive"
+                deadline.overdue &&
+                  !task.completed &&
+                  "text-destructive"
               )}
             >
               <CalendarClock className="size-3" />
+
               {deadline.label}
+
+              {deadline.overdue &&
+                !task.completed && (
+                  <span>
+                    · {t.task.overdue}
+                  </span>
+                )}
             </span>
           )}
+
           {focusedSeconds > 0 && (
             <span className="flex items-center gap-1">
               <Timer className="size-3" />
-              累计 {formatMinutes(focusedSeconds)}
+
+              {t.task.focused}{" "}
+              {formatFocusedTime(
+                focusedSeconds,
+                language
+              )}
             </span>
           )}
         </div>
@@ -110,27 +190,33 @@ export function TaskCard({
           variant="ghost"
           size="icon"
           className="size-7 text-primary hover:text-primary"
-          onClick={() => onSelectForTimer(task.id)}
+          onClick={() =>
+            onSelectForTimer(task.id)
+          }
           disabled={task.completed}
-          title="设为计时任务"
+          title={t.task.setFocusTask}
         >
           <Timer className="size-3.5" />
         </Button>
+
         <Button
           variant="ghost"
           size="icon"
           className="size-7"
           onClick={() => onEdit(task)}
-          title="编辑"
+          title={t.task.edit}
         >
           <Pencil className="size-3.5" />
         </Button>
+
         <Button
           variant="ghost"
           size="icon"
           className="size-7 text-destructive hover:text-destructive"
-          onClick={() => onDelete(task.id)}
-          title="删除"
+          onClick={() =>
+            onDelete(task.id)
+          }
+          title={t.task.delete}
         >
           <Trash2 className="size-3.5" />
         </Button>
