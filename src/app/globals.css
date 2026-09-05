@@ -3,10 +3,54 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ---------- Nova dark theme tokens ---------- */
+/* ---------- Planora theme tokens ---------- */
+
+/* Default = Light theme */
 :root {
   --radius: 0.65rem;
 
+  --background: oklch(0.975 0.004 260);
+  --foreground: oklch(0.22 0.012 260);
+
+  --card: oklch(0.995 0.002 260);
+  --card-foreground: oklch(0.22 0.012 260);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.012 260);
+
+  --primary: oklch(0.61 0.17 280);
+  --primary-foreground: oklch(0.99 0.005 280);
+
+  --secondary: oklch(0.945 0.007 260);
+  --secondary-foreground: oklch(0.3 0.012 260);
+
+  --muted: oklch(0.95 0.006 260);
+  --muted-foreground: oklch(0.52 0.015 260);
+
+  --accent: oklch(0.93 0.015 275);
+  --accent-foreground: oklch(0.25 0.02 270);
+
+  --destructive: oklch(0.58 0.22 25);
+  --destructive-foreground: oklch(0.99 0.01 25);
+
+  --border: oklch(0.86 0.01 260);
+  --input: oklch(0.88 0.01 260);
+  --ring: oklch(0.61 0.17 280 / 55%);
+
+  /* Planora signature accents */
+  --focus: oklch(0.61 0.2 32);
+  --focus-foreground: oklch(0.99 0.01 32);
+
+  --rest: oklch(0.58 0.15 155);
+  --rest-foreground: oklch(0.99 0.01 155);
+
+  --priority-high: oklch(0.59 0.22 25);
+  --priority-medium: oklch(0.68 0.16 85);
+  --priority-low: oklch(0.57 0.15 155);
+}
+
+/* Dark theme */
+.dark {
   --background: oklch(0.15 0.01 260);
   --foreground: oklch(0.94 0.005 260);
 
@@ -35,10 +79,10 @@
   --input: oklch(0.28 0.012 260 / 80%);
   --ring: oklch(0.72 0.16 280 / 55%);
 
-  /* Planora signature accents */
-  --focus: oklch(0.66 0.19 32);      /* tomato — focus phase */
+  --focus: oklch(0.66 0.19 32);
   --focus-foreground: oklch(0.98 0.01 32);
-  --rest: oklch(0.72 0.16 155);      /* mint — rest phase */
+
+  --rest: oklch(0.72 0.16 155);
   --rest-foreground: oklch(0.14 0.03 155);
 
   --priority-high: oklch(0.63 0.22 25);
@@ -46,34 +90,38 @@
   --priority-low: oklch(0.72 0.15 155);
 }
 
-.dark {
-  --background: oklch(0.15 0.01 260);
-  --foreground: oklch(0.94 0.005 260);
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
 
   --color-focus: var(--focus);
   --color-focus-foreground: var(--focus-foreground);
+
   --color-rest: var(--rest);
   --color-rest-foreground: var(--rest-foreground);
 
@@ -87,39 +135,53 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 
   --animate-pulse-ring: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes pulse-ring {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.55; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.55;
+  }
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   html {
+    color-scheme: light;
+  }
+
+  html.dark {
     color-scheme: dark;
   }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
 
-/* thin scrollbar to match the dark, dense workbench feel */
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
   }
+
   .scrollbar-thin::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
+
   .scrollbar-thin::-webkit-scrollbar-thumb {
     background-color: var(--border);
     border-radius: 999px;

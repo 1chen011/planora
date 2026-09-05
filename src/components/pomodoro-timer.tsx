@@ -1,11 +1,25 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import {
+  useMemo,
+  useState,
+} from "react";
+
 import { toast } from "sonner";
-import { Coffee, Flame, Pause, Play, Settings2, Square } from "lucide-react";
+
+import {
+  Coffee,
+  Flame,
+  Pause,
+  Play,
+  Settings2,
+  Square,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 import {
   Select,
   SelectContent,
@@ -13,39 +27,74 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { Separator } from "@/components/ui/separator";
+
+import { useLanguage } from "@/i18n/language-context";
+
 import { cn } from "@/lib/utils";
+
+import type { Language } from "@/i18n/translation";
 import type { usePomodoro } from "@/hooks/use-pomodoro";
 import type { Task } from "@/types/task";
 
 const RADIUS = 78;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+const CIRCUMFERENCE =
+  2 * Math.PI * RADIUS;
 
-function formatClock(totalSeconds: number) {
-  const m = Math.floor(totalSeconds / 60)
+function formatClock(
+  totalSeconds: number
+) {
+  const minutes = Math.floor(
+    totalSeconds / 60
+  )
     .toString()
     .padStart(2, "0");
-  const s = Math.floor(totalSeconds % 60)
+
+  const seconds = Math.floor(
+    totalSeconds % 60
+  )
     .toString()
     .padStart(2, "0");
-  return `${m}:${s}`;
+
+  return `${minutes}:${seconds}`;
 }
 
-function formatTime(iso: string) {
-  return new Date(iso).toLocaleTimeString("zh-CN", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+function formatTime(
+  iso: string,
+  language: Language
+) {
+  return new Date(
+    iso
+  ).toLocaleTimeString(
+    language === "zh"
+      ? "zh-CN"
+      : "en-US",
+    {
+      hour: "2-digit",
+      minute: "2-digit",
+    }
+  );
 }
 
 export function PomodoroTimer({
   pomodoro,
   activeTasks,
 }: {
-  pomodoro: ReturnType<typeof usePomodoro>;
+  pomodoro: ReturnType<
+    typeof usePomodoro
+  >;
   activeTasks: Task[];
 }) {
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const {
+    language,
+    t,
+  } = useLanguage();
+
+  const [
+    settingsOpen,
+    setSettingsOpen,
+  ] = useState(false);
 
   const {
     settings,
@@ -67,38 +116,65 @@ export function PomodoroTimer({
   const progress = useMemo(
     () =>
       phaseDurationSeconds > 0
-        ? 1 - remainingSeconds / phaseDurationSeconds
+        ? 1 -
+          remainingSeconds /
+            phaseDurationSeconds
         : 0,
-    [remainingSeconds, phaseDurationSeconds]
+    [
+      remainingSeconds,
+      phaseDurationSeconds,
+    ]
   );
 
-  const phaseColor = phase === "focus" ? "var(--color-focus)" : "var(--color-rest)";
-  const canStart = Boolean(selectedTaskId);
+  const phaseColor =
+    phase === "focus"
+      ? "var(--color-focus)"
+      : "var(--color-rest)";
+
+  const canStart =
+    Boolean(selectedTaskId);
 
   function handleStart() {
     if (!canStart) {
-      toast.warning("请先选择一条任务再开始计时");
+      toast.warning(
+        t.pomodoro.chooseTaskWarning
+      );
+
       return;
     }
+
     start();
   }
 
   function handleStop() {
-    if (status === "idle") return;
+    if (status === "idle") {
+      return;
+    }
+
     stopEarly();
-    toast.info("已停止并记录本次投入时长");
+
+    toast.info(
+      t.pomodoro.stoppedMessage
+    );
   }
 
   return (
     <aside className="flex h-full w-80 shrink-0 flex-col gap-4 overflow-y-auto scrollbar-thin border-l border-border bg-card/40 p-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold">番茄计时器</h2>
+        <h2 className="text-sm font-semibold">
+          {t.pomodoro.title}
+        </h2>
+
         <Button
           variant="ghost"
           size="icon"
           className="size-7"
-          onClick={() => setSettingsOpen((v) => !v)}
-          title="计时设置"
+          onClick={() =>
+            setSettingsOpen(
+              (current) => !current
+            )
+          }
+          title={t.pomodoro.settings}
         >
           <Settings2 className="size-3.5" />
         </Button>
@@ -107,39 +183,70 @@ export function PomodoroTimer({
       {settingsOpen && (
         <div className="grid grid-cols-2 gap-3 rounded-lg border border-border bg-secondary/30 p-3">
           <div className="grid gap-1">
-            <Label htmlFor="focus-minutes" className="text-xs">
-              专注时长（分钟）
+            <Label
+              htmlFor="focus-minutes"
+              className="text-xs"
+            >
+              {t.pomodoro.focusMinutes}
             </Label>
+
             <Input
               id="focus-minutes"
               type="number"
               min={1}
               max={180}
-              value={settings.focusMinutes}
-              disabled={status !== "idle"}
-              onChange={(e) =>
+              value={
+                settings.focusMinutes
+              }
+              disabled={
+                status !== "idle"
+              }
+              onChange={(event) =>
                 updateSettings({
                   ...settings,
-                  focusMinutes: Math.max(1, Number(e.target.value) || 1),
+                  focusMinutes:
+                    Math.max(
+                      1,
+                      Number(
+                        event.target
+                          .value
+                      ) || 1
+                    ),
                 })
               }
             />
           </div>
+
           <div className="grid gap-1">
-            <Label htmlFor="break-minutes" className="text-xs">
-              休息时长（分钟）
+            <Label
+              htmlFor="break-minutes"
+              className="text-xs"
+            >
+              {t.pomodoro.breakMinutes}
             </Label>
+
             <Input
               id="break-minutes"
               type="number"
               min={1}
               max={60}
-              value={settings.breakMinutes}
-              disabled={status !== "idle"}
-              onChange={(e) =>
+              value={
+                settings.breakMinutes
+              }
+              disabled={
+                status !== "idle"
+              }
+              onChange={(event) =>
                 updateSettings({
                   ...settings,
-                  breakMinutes: Math.max(1, Number(e.target.value) || 1),
+                  breakMinutes:
+                    Math.max(
+                      1,
+                      Number(
+                        event.target
+                          .value
+                      ) || 1
+                    ),
                 })
               }
             />
@@ -147,39 +254,66 @@ export function PomodoroTimer({
         </div>
       )}
 
-      {/* task binding */}
       <div className="grid gap-1.5">
-        <Label className="text-xs text-muted-foreground">计时绑定任务</Label>
+        <Label className="text-xs text-muted-foreground">
+          {t.pomodoro.taskLabel}
+        </Label>
+
         <Select
-          value={selectedTaskId ?? undefined}
-          onValueChange={(id) => selectTask(id)}
-          disabled={status === "running"}
+          value={
+            selectedTaskId ??
+            undefined
+          }
+          onValueChange={(id) =>
+            selectTask(id)
+          }
+          disabled={
+            status === "running"
+          }
         >
           <SelectTrigger>
-            <SelectValue placeholder="选择一条待完成任务" />
+            <SelectValue
+              placeholder={
+                t.pomodoro
+                  .chooseTask
+              }
+            />
           </SelectTrigger>
+
           <SelectContent>
-            {activeTasks.length === 0 ? (
+            {activeTasks.length ===
+            0 ? (
               <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                暂无待完成任务
+                {
+                  t.pomodoro
+                    .noTasks
+                }
               </div>
             ) : (
-              activeTasks.map((t) => (
-                <SelectItem key={t.id} value={t.id}>
-                  {t.title}
-                </SelectItem>
-              ))
+              activeTasks.map(
+                (task) => (
+                  <SelectItem
+                    key={task.id}
+                    value={task.id}
+                  >
+                    {task.title}
+                  </SelectItem>
+                )
+              )
             )}
           </SelectContent>
         </Select>
       </div>
 
-      {/* phase switch */}
       <div className="grid grid-cols-2 gap-1 rounded-lg bg-secondary/40 p-1">
         <button
           type="button"
-          disabled={status !== "idle"}
-          onClick={() => switchPhase("focus")}
+          disabled={
+            status !== "idle"
+          }
+          onClick={() =>
+            switchPhase("focus")
+          }
           className={cn(
             "flex items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed",
             phase === "focus"
@@ -188,12 +322,18 @@ export function PomodoroTimer({
           )}
         >
           <Flame className="size-3.5" />
-          专注
+
+          {t.pomodoro.focus}
         </button>
+
         <button
           type="button"
-          disabled={status !== "idle"}
-          onClick={() => switchPhase("break")}
+          disabled={
+            status !== "idle"
+          }
+          onClick={() =>
+            switchPhase("break")
+          }
           className={cn(
             "flex items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed",
             phase === "break"
@@ -202,14 +342,19 @@ export function PomodoroTimer({
           )}
         >
           <Coffee className="size-3.5" />
-          休息
+
+          {t.pomodoro.break}
         </button>
       </div>
 
-      {/* timer ring */}
       <div className="flex flex-col items-center py-2">
         <div className="relative flex size-44 items-center justify-center">
-          <svg width="176" height="176" viewBox="0 0 176 176" className="-rotate-90">
+          <svg
+            width="176"
+            height="176"
+            viewBox="0 0 176 176"
+            className="-rotate-90"
+          >
             <circle
               cx="88"
               cy="88"
@@ -218,6 +363,7 @@ export function PomodoroTimer({
               stroke="var(--color-border)"
               strokeWidth="8"
             />
+
             <circle
               cx="88"
               cy="88"
@@ -226,96 +372,175 @@ export function PomodoroTimer({
               stroke={phaseColor}
               strokeWidth="8"
               strokeLinecap="round"
-              strokeDasharray={CIRCUMFERENCE}
-              strokeDashoffset={CIRCUMFERENCE * (1 - progress)}
-              className={cn(status === "running" && "transition-[stroke-dashoffset] duration-1000 ease-linear")}
+              strokeDasharray={
+                CIRCUMFERENCE
+              }
+              strokeDashoffset={
+                CIRCUMFERENCE *
+                (1 - progress)
+              }
+              className={cn(
+                status ===
+                  "running" &&
+                  "transition-[stroke-dashoffset] duration-1000 ease-linear"
+              )}
             />
           </svg>
+
           <div className="absolute flex flex-col items-center">
             <span className="font-mono text-4xl font-semibold tabular-nums">
-              {formatClock(remainingSeconds)}
+              {formatClock(
+                remainingSeconds
+              )}
             </span>
+
             <span
               className={cn(
                 "mt-1 text-[11px] font-medium",
-                phase === "focus" ? "text-focus" : "text-rest"
+                phase === "focus"
+                  ? "text-focus"
+                  : "text-rest"
               )}
             >
               {status === "running"
-                ? phase === "focus"
-                  ? "专注进行中"
-                  : "休息进行中"
-                : status === "paused"
-                ? "已暂停"
-                : "待开始"}
+                ? phase ===
+                  "focus"
+                  ? t.pomodoro
+                      .runningFocus
+                  : t.pomodoro
+                      .runningBreak
+                : status ===
+                    "paused"
+                  ? t.pomodoro.paused
+                  : t.pomodoro.ready}
             </span>
           </div>
         </div>
 
         {selectedTask ? (
           <p className="mt-3 max-w-full truncate text-xs text-muted-foreground">
-            绑定任务：
-            <span className="font-medium text-foreground">{selectedTask.title}</span>
+            {t.pomodoro.taskPrefix}{" "}
+            <span className="font-medium text-foreground">
+              {selectedTask.title}
+            </span>
           </p>
         ) : (
-          <p className="mt-3 text-xs text-muted-foreground">请先选择一条任务</p>
+          <p className="mt-3 text-xs text-muted-foreground">
+            {
+              t.pomodoro
+                .chooseFirst
+            }
+          </p>
         )}
 
         <div className="mt-4 flex items-center gap-2">
           {status === "running" ? (
-            <Button onClick={pause} size="sm" variant="secondary">
+            <Button
+              onClick={pause}
+              size="sm"
+              variant="secondary"
+            >
               <Pause className="size-3.5" />
-              暂停
+
+              {t.pomodoro.pause}
             </Button>
           ) : (
-            <Button onClick={handleStart} size="sm" disabled={!canStart}>
+            <Button
+              onClick={handleStart}
+              size="sm"
+              disabled={!canStart}
+            >
               <Play className="size-3.5" />
-              {status === "paused" ? "继续" : "开始"}
+
+              {status === "paused"
+                ? t.pomodoro.resume
+                : t.pomodoro.start}
             </Button>
           )}
+
           <Button
             onClick={handleStop}
             size="sm"
             variant="outline"
-            disabled={status === "idle"}
+            disabled={
+              status === "idle"
+            }
           >
             <Square className="size-3.5" />
-            停止
+
+            {t.pomodoro.stop}
           </Button>
         </div>
       </div>
 
       <Separator />
 
-      {/* today's log */}
       <div className="flex-1">
-        <p className="mb-2 text-xs font-medium text-muted-foreground">今日记录</p>
-        {todaySessions.length === 0 ? (
-          <p className="text-xs text-muted-foreground">今天还没有计时记录。</p>
+        <p className="mb-2 text-xs font-medium text-muted-foreground">
+          {t.pomodoro.todayLog}
+        </p>
+
+        {todaySessions.length ===
+        0 ? (
+          <p className="text-xs text-muted-foreground">
+            {
+              t.pomodoro
+                .noRecords
+            }
+          </p>
         ) : (
           <ul className="flex flex-col gap-2">
-            {todaySessions.map((s) => (
-              <li
-                key={s.id}
-                className="flex items-center justify-between rounded-md border border-border bg-secondary/20 px-2.5 py-1.5 text-xs"
-              >
-                <div className="min-w-0">
-                  <p className="truncate font-medium">{s.taskTitle}</p>
-                  <p className="text-[11px] text-muted-foreground">
-                    {formatTime(s.startedAt)} · {s.phase === "focus" ? "专注" : "休息"}
-                    {!s.completedFully && " · 提前结束"}
-                  </p>
-                </div>
-                <span
-                  className={cn(
-                    "shrink-0 font-mono tabular-nums",
-                    s.phase === "focus" ? "text-focus" : "text-rest"
-                  )}
+            {todaySessions.map(
+              (session) => (
+                <li
+                  key={session.id}
+                  className="flex items-center justify-between rounded-md border border-border bg-secondary/20 px-2.5 py-1.5 text-xs"
                 >
-                  {Math.round(s.elapsedSeconds / 60)} 分
-                </span>
-              </li>
-            ))}
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">
+                      {
+                        session.taskTitle
+                      }
+                    </p>
+
+                    <p className="text-[11px] text-muted-foreground">
+                      {formatTime(
+                        session.startedAt,
+                        language
+                      )}{" "}
+                      ·{" "}
+                      {session.phase ===
+                      "focus"
+                        ? t.pomodoro
+                            .focus
+                        : t.pomodoro
+                            .break}
+
+                      {!session.completedFully &&
+                        ` · ${t.pomodoro.endedEarly}`}
+                    </p>
+                  </div>
+
+                  <span
+                    className={cn(
+                      "shrink-0 font-mono tabular-nums",
+                      session.phase ===
+                        "focus"
+                        ? "text-focus"
+                        : "text-rest"
+                    )}
+                  >
+                    {Math.round(
+                      session.elapsedSeconds /
+                        60
+                    )}{" "}
+                    {language === "zh"
+                      ? "分"
+                      : "min"}
+                  </span>
+                </li>
+              )
+            )}
           </ul>
         )}
       </div>

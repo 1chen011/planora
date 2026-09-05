@@ -1,13 +1,24 @@
-import { cn } from "@/lib/utils";
-import { PRIORITY_LABEL, type Priority } from "@/types/task";
+"use client";
 
-const DOT_COLOR: Record<Priority, string> = {
+import { cn } from "@/lib/utils";
+
+import { useLanguage } from "@/i18n/language-context";
+
+import type { Priority } from "@/types/task";
+
+const DOT_COLOR: Record<
+  Priority,
+  string
+> = {
   high: "bg-priority-high",
   medium: "bg-priority-medium",
   low: "bg-priority-low",
 };
 
-const TEXT_COLOR: Record<Priority, string> = {
+const TEXT_COLOR: Record<
+  Priority,
+  string
+> = {
   high: "text-priority-high",
   medium: "text-priority-medium",
   low: "text-priority-low",
@@ -20,6 +31,17 @@ export function PriorityBadge({
   priority: Priority;
   className?: string;
 }) {
+  const { t } = useLanguage();
+
+  const labels: Record<
+    Priority,
+    string
+  > = {
+    high: t.task.priority.high,
+    medium: t.task.priority.medium,
+    low: t.task.priority.low,
+  };
+
   return (
     <span
       className={cn(
@@ -28,8 +50,14 @@ export function PriorityBadge({
         className
       )}
     >
-      <span className={cn("size-1.5 rounded-full", DOT_COLOR[priority])} />
-      {PRIORITY_LABEL[priority]}优先级
+      <span
+        className={cn(
+          "size-1.5 rounded-full",
+          DOT_COLOR[priority]
+        )}
+      />
+
+      {labels[priority]}
     </span>
   );
 }

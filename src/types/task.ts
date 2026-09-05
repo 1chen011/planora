@@ -2,45 +2,65 @@ export type Priority = "low" | "medium" | "high";
 
 export type Task = {
   id: string;
+
   title: string;
+
   note: string;
-  deadline: string; // ISO date string, "" if not set
+
+  deadline: string;
+
   priority: Priority;
+
   completed: boolean;
-  createdAt: string; // ISO datetime string
+
+  createdAt: string;
+
+  /**
+   * YYYY-MM-DD when this task has been
+   * intentionally selected for that day.
+   *
+   * Empty string means the task is not
+   * currently planned for a specific day.
+   */
+  plannedDate: string;
 };
 
-export type TaskFormValues = Omit<Task, "id" | "completed" | "createdAt">;
+export type TaskFormValues = Pick<
+  Task,
+  "title" | "note" | "deadline" | "priority"
+>;
 
-export type TaskFilter = "all" | "active" | "completed";
+export type TaskFilter = "today" | "all" | "active" | "completed";
 
 export type PomodoroPhase = "focus" | "break";
 
-/** A single completed (or manually stopped) timer run, bound to a task. */
 export type PomodoroSession = {
   id: string;
+
   taskId: string;
+
   taskTitle: string;
+
   phase: PomodoroPhase;
-  durationSeconds: number; // planned duration
-  elapsedSeconds: number; // actual time spent before it ended/was stopped
-  completedFully: boolean; // reached 0:00 naturally
-  startedAt: string; // ISO datetime
-  endedAt: string; // ISO datetime
+
+  durationSeconds: number;
+
+  elapsedSeconds: number;
+
+  completedFully: boolean;
+
+  startedAt: string;
+
+  endedAt: string;
 };
 
 export type PomodoroSettings = {
   focusMinutes: number;
+
   breakMinutes: number;
 };
 
 export const DEFAULT_POMODORO_SETTINGS: PomodoroSettings = {
   focusMinutes: 25,
   breakMinutes: 5,
-};
-
-export const PRIORITY_LABEL: Record<Priority, string> = {
-  high: "高",
-  medium: "中",
-  low: "低",
 };
