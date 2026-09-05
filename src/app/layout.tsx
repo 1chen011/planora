@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "sonner";
 
 import { LanguageProvider } from "@/i18n/language-context";
+import { ThemeProvider } from "@/components/theme-provider";
+import { AppToaster } from "@/components/app-toaster";
 
 import "./globals.css";
 
@@ -28,19 +29,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans`}
-      >
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans`}>
         <LanguageProvider>
-          {children}
-
-          <Toaster
-            theme="dark"
-            position="top-right"
-            richColors
-            closeButton
-          />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem={false}
+            enableColorScheme
+            disableTransitionOnChange
+            storageKey="planora-theme"
+          >
+            {children}
+            <AppToaster />
+          </ThemeProvider>
         </LanguageProvider>
       </body>
     </html>
