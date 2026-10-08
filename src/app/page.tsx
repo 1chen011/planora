@@ -16,6 +16,21 @@ import { useLanguage } from "@/i18n/language-context";
 
 import type { Task, TaskFilter } from "@/types/task";
 
+function isToday(iso: string | null) {
+  if (!iso) {
+    return false;
+  }
+
+  const date = new Date(iso);
+  const today = new Date();
+
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+}
+
 export default function Home() {
   const { t } = useLanguage();
 
@@ -110,11 +125,20 @@ export default function Home() {
 
   const activeTasks = tasks.filter((task) => !task.completed);
 
-  const todayFocusMinutes = Math.round(
-    pomodoro.todaySessions
-      .filter((session) => session.phase === "focus")
-      .reduce((sum, session) => sum + session.elapsedSeconds, 0) / 60,
+  const todayFocusSessions = pomodoro.todaySessions.filter(
+    (session) => session.phase === "focus",
   );
+
+  const todayFocusMinutes = Math.round(
+    todayFocusSessions.reduce(
+      (sum, session) => sum + session.elapsedSeconds,
+      0,
+    ) / 60,
+  );
+
+  const todayCompletedTasks = tasks.filter((task) =>
+    isToday(task.completedAt),
+  ).length;
 
   if (!hydrated) {
     return (
@@ -145,6 +169,11 @@ export default function Home() {
           onToggleComplete={toggleComplete}
           onToggleToday={handleToggleToday}
           onSelectForTimer={pomodoro.selectTask}
+          todayProgress={{
+            focusMinutes: todayFocusMinutes,
+            focusSessions: todayFocusSessions.length,
+            completedTasks: todayCompletedTasks,
+          }}
         />
       </main>
 

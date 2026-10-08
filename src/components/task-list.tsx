@@ -5,6 +5,7 @@ import { ClipboardList, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { TaskCard } from "@/components/task-card";
+import { TodayProgress, type TodayProgressSummary } from "@/components/today-progress";
 
 import { useLanguage } from "@/i18n/language-context";
 
@@ -21,6 +22,7 @@ export function TaskList({
   onToggleComplete,
   onToggleToday,
   onSelectForTimer,
+  todayProgress,
 }: {
   filter: TaskFilter;
 
@@ -41,6 +43,8 @@ export function TaskList({
   onToggleToday: (task: Task) => void;
 
   onSelectForTimer: (id: string) => void;
+
+  todayProgress: TodayProgressSummary;
 }) {
   const { t } = useLanguage();
 
@@ -87,6 +91,8 @@ export function TaskList({
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-thin px-6 py-4">
+        {filter === "today" && <TodayProgress {...todayProgress} />}
+
         {tasks.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-muted-foreground">
             <ClipboardList className="size-8 opacity-40" />

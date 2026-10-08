@@ -138,6 +138,7 @@ export const translations = {
 
       todayLog: "Today's Focus Log",
       noRecords: "No focus sessions yet today.",
+      noRecordsHint: "Complete a focus session to build your daily log.",
       endedEarly: "Stopped early",
 
       chooseTaskWarning: "Choose a task before starting.",
@@ -161,7 +162,7 @@ export const translations = {
       completed: "Tasks completed",
 
       noProgress:
-        "Start with one task. Your work will become visible here as the day moves forward.",
+        "Your progress will appear here throughout the day.",
     },
 
     toast: {
@@ -320,6 +321,8 @@ export const translations = {
       todayLog: "今日专注记录",
 
       noRecords: "今天还没有专注记录。",
+
+      noRecordsHint: "完成一次专注后，你今天的投入会记录在这里。",
 
       endedEarly: "提前结束",
 

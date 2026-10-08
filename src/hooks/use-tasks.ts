@@ -21,6 +21,9 @@ function normalizeTask(task: Task): Task {
     ...task,
 
     plannedDate: typeof task.plannedDate === "string" ? task.plannedDate : "",
+
+    completedAt:
+      typeof task.completedAt === "string" ? task.completedAt : null,
   };
 }
 
@@ -59,6 +62,8 @@ export function useTasks() {
 
         completed: false,
 
+        completedAt: null,
+
         createdAt: new Date().toISOString(),
 
         plannedDate: options?.addToToday ? getLocalDateKey() : "",
@@ -90,14 +95,19 @@ export function useTasks() {
 
   const toggleComplete = useCallback((id: string) => {
     setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id
-          ? {
-              ...task,
-              completed: !task.completed,
-            }
-          : task,
-      ),
+      prev.map((task) => {
+        if (task.id !== id) {
+          return task;
+        }
+
+        const nextCompleted = !task.completed;
+
+        return {
+          ...task,
+          completed: nextCompleted,
+          completedAt: nextCompleted ? new Date().toISOString() : null,
+        };
+      }),
     );
   }, []);
 
