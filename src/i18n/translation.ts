@@ -153,16 +153,17 @@ export const translations = {
 
       deletedTask: "Deleted task",
     },
-
     progress: {
       title: "Today's Progress",
 
       focused: "Focused",
+
+      session: "Focus session",
       sessions: "Focus sessions",
+
       completed: "Tasks completed",
 
-      noProgress:
-        "Your progress will appear here throughout the day.",
+      noProgress: "Your progress will appear here throughout the day.",
     },
 
     toast: {
@@ -344,14 +345,13 @@ export const translations = {
 
       focused: "专注时间",
 
+      session: "专注次数",
       sessions: "专注次数",
 
       completed: "完成任务",
 
-      noProgress:
-        "从一件事情开始。随着一天推进，你真正完成的工作会逐渐出现在这里。",
+      noProgress: "今天的进展会随着你的工作逐渐出现在这里。",
     },
-
     toast: {
       created: "任务已创建",
       updated: "任务已更新",
