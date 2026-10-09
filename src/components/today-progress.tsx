@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  CheckCircle2,
-  Clock3,
-  Flame,
-} from "lucide-react";
+import { CheckCircle2, Clock3, Flame } from "lucide-react";
 
 import { useLanguage } from "@/i18n/language-context";
 
@@ -22,9 +18,7 @@ export function TodayProgress({
   const { language, t } = useLanguage();
 
   const hasProgress =
-    focusMinutes > 0 ||
-    focusSessions > 0 ||
-    completedTasks > 0;
+    focusMinutes > 0 || focusSessions > 0 || completedTasks > 0;
 
   const focusSessionLabel =
     language === "en"
@@ -66,32 +60,26 @@ export function TodayProgress({
       </div>
 
       <div className="grid grid-cols-3 divide-x divide-border rounded-lg border border-border bg-card/30">
-        {items.map(
-          ({
-            label,
-            value,
-            icon: Icon,
-          }) => (
-            <div
-              key={label}
-              className="flex items-center gap-2.5 px-3 py-3"
-            >
-              <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-secondary/50 text-muted-foreground">
-                <Icon className="size-3.5" />
-              </div>
-
-              <div className="min-w-0">
-                <p className="font-mono text-[15px] font-semibold leading-none tabular-nums">
-                  {value}
-                </p>
-
-                <p className="mt-1 truncate text-[11px] text-muted-foreground">
-                  {label}
-                </p>
-              </div>
+        {items.map(({ label, value, icon: Icon }) => (
+          <div
+            key={label}
+            className="flex items-center gap-2.5 px-3 py-3"
+          >
+            <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-secondary/50 text-muted-foreground">
+              <Icon className="size-3.5" />
             </div>
-          ),
-        )}
+
+            <div className="min-w-0">
+              <p className="font-mono text-[15px] font-semibold leading-none tabular-nums">
+                {value}
+              </p>
+
+              <p className="mt-1 truncate text-[11px] text-muted-foreground">
+                {label}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
