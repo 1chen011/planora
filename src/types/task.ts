@@ -13,6 +13,8 @@ export type Task = {
 
   completed: boolean;
 
+  completedAt: string | null;
+
   createdAt: string;
 
   /**

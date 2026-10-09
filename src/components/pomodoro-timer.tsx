@@ -126,6 +126,16 @@ export function PomodoroTimer({
     ]
   );
 
+  const timelineSessions = useMemo(
+    () =>
+      [...todaySessions].sort(
+        (a, b) =>
+          new Date(a.startedAt).getTime() -
+          new Date(b.startedAt).getTime(),
+      ),
+    [todaySessions],
+  );
+
   const phaseColor =
     phase === "focus"
       ? "var(--color-focus)"
@@ -476,72 +486,82 @@ export function PomodoroTimer({
       <Separator />
 
       <div className="flex-1">
-        <p className="mb-2 text-xs font-medium text-muted-foreground">
-          {t.pomodoro.todayLog}
-        </p>
-
-        {todaySessions.length ===
-        0 ? (
-          <p className="text-xs text-muted-foreground">
-            {
-              t.pomodoro
-                .noRecords
-            }
+        <div className="mb-3">
+          <p className="text-xs font-medium text-muted-foreground">
+            {t.pomodoro.todayLog}
           </p>
-        ) : (
-          <ul className="flex flex-col gap-2">
-            {todaySessions.map(
-              (session) => (
-                <li
-                  key={session.id}
-                  className="flex items-center justify-between rounded-md border border-border bg-secondary/20 px-2.5 py-1.5 text-xs"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate font-medium">
-                      {
-                        session.taskTitle
-                      }
-                    </p>
+        </div>
 
-                    <p className="text-[11px] text-muted-foreground">
-                      {formatTime(
-                        session.startedAt,
-                        language
-                      )}{" "}
-                      ·{" "}
-                      {session.phase ===
-                      "focus"
-                        ? t.pomodoro
-                            .focus
-                        : t.pomodoro
-                            .break}
+        {timelineSessions.length === 0 ? (
+          <div className="rounded-lg border border-dashed border-border px-3 py-3">
+            <p className="text-xs text-muted-foreground">
+              {t.pomodoro.noRecords}
+            </p>
+
+            <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground/70">
+              {t.pomodoro.noRecordsHint}
+            </p>
+          </div>
+        ) : (
+          <ol className="space-y-0">
+            {timelineSessions.map((session, index) => (
+              <li
+                key={session.id}
+                className="grid grid-cols-[60px_1fr] gap-3 text-xs"
+              >
+                <time
+                  dateTime={session.startedAt}
+                  className="pt-0.5 font-mono text-[10px] tabular-nums text-muted-foreground"
+                >
+                  {formatTime(session.startedAt, language)}
+                </time>
+
+                <div
+                  className={cn(
+                    "relative pb-4 pl-4",
+                    index !== timelineSessions.length - 1 &&
+                      "before:absolute before:left-[3px] before:top-3 before:h-[calc(100%-4px)] before:w-px before:bg-border",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "absolute left-0 top-1 size-[7px] rounded-full ring-2 ring-background",
+                      session.phase === "focus" ? "bg-focus" : "bg-rest",
+                    )}
+                  />
+
+                  <div className="min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="min-w-0 truncate font-medium">
+                        {session.taskTitle}
+                      </p>
+
+                      <span
+                        className={cn(
+                          "shrink-0 font-mono text-[11px] tabular-nums",
+                          session.phase === "focus"
+                            ? "text-focus"
+                            : "text-rest",
+                        )}
+                      >
+                        {Math.round(session.elapsedSeconds / 60)}{" "}
+                        {language === "zh" ? "分" : "min"}
+                      </span>
+                    </div>
+
+                    <p className="mt-0.5 text-[11px] text-muted-foreground">
+                      {session.phase === "focus"
+                        ? t.pomodoro.focus
+                        : t.pomodoro.break}
 
                       {!session.completedFully &&
                         ` · ${t.pomodoro.endedEarly}`}
                     </p>
                   </div>
-
-                  <span
-                    className={cn(
-                      "shrink-0 font-mono tabular-nums",
-                      session.phase ===
-                        "focus"
-                        ? "text-focus"
-                        : "text-rest"
-                    )}
-                  >
-                    {Math.round(
-                      session.elapsedSeconds /
-                        60
-                    )}{" "}
-                    {language === "zh"
-                      ? "分"
-                      : "min"}
-                  </span>
-                </li>
-              )
-            )}
-          </ul>
+                </div>
+              </li>
+            ))}
+          </ol>
         )}
       </div>
     </aside>
