@@ -169,7 +169,7 @@ export const translations = {
       notePlaceholder:
         "Context, next step, links, or acceptance criteria (optional)",
 
-      deadline: "Deadline",
+      deadline: "Due date",
 
       priority: "Priority",
 
