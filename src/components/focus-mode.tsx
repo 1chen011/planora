@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
+import {
+  useEffect,
+} from "react";
 
 import {
   Coffee,
   Flame,
   Minimize2,
   Pause,
+  PictureInPicture2,
   Play,
   Square,
 } from "lucide-react";
@@ -21,12 +24,18 @@ import { cn } from "@/lib/utils";
 
 import type { usePomodoro } from "@/hooks/use-pomodoro";
 
-function formatClock(totalSeconds: number) {
-  const minutes = Math.floor(totalSeconds / 60)
+function formatClock(
+  totalSeconds: number,
+) {
+  const minutes = Math.floor(
+    totalSeconds / 60,
+  )
     .toString()
     .padStart(2, "0");
 
-  const seconds = Math.floor(totalSeconds % 60)
+  const seconds = Math.floor(
+    totalSeconds % 60,
+  )
     .toString()
     .padStart(2, "0");
 
@@ -36,11 +45,22 @@ function formatClock(totalSeconds: number) {
 export function FocusMode({
   pomodoro,
   onExit,
+  onEnterMiniFocus,
+  miniFocusSupported,
 }: {
-  pomodoro: ReturnType<typeof usePomodoro>;
+  pomodoro: ReturnType<
+    typeof usePomodoro
+  >;
+
   onExit: () => void;
+
+  onEnterMiniFocus:
+    () => void;
+
+  miniFocusSupported: boolean;
 }) {
-  const { t } = useLanguage();
+  const { t } =
+    useLanguage();
 
   const {
     selectedTask,
@@ -53,22 +73,36 @@ export function FocusMode({
   } = pomodoro;
 
   useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
+    function handleKeyDown(
+      event: KeyboardEvent,
+    ) {
+      if (
+        event.key ===
+        "Escape"
+      ) {
         onExit();
       }
     }
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener(
+      "keydown",
+      handleKeyDown,
+    );
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener(
+        "keydown",
+        handleKeyDown,
+      );
     };
   }, [onExit]);
 
   function handleStart() {
     if (!selectedTask) {
-      toast.warning(t.pomodoro.chooseTaskWarning);
+      toast.warning(
+        t.pomodoro
+          .chooseTaskWarning,
+      );
 
       return;
     }
@@ -77,13 +111,18 @@ export function FocusMode({
   }
 
   function handleStop() {
-    if (status === "idle") {
+    if (
+      status === "idle"
+    ) {
       return;
     }
 
     stopEarly();
 
-    toast.info(t.pomodoro.stoppedMessage);
+    toast.info(
+      t.pomodoro
+        .stoppedMessage,
+    );
   }
 
   const phaseLabel =
@@ -94,15 +133,17 @@ export function FocusMode({
   const statusLabel =
     status === "running"
       ? phase === "focus"
-        ? t.pomodoro.runningFocus
-        : t.pomodoro.runningBreak
+        ? t.pomodoro
+            .runningFocus
+        : t.pomodoro
+            .runningBreak
       : status === "paused"
         ? t.pomodoro.paused
         : t.pomodoro.ready;
 
   return (
     <div className="fixed inset-0 z-50 flex min-h-dvh flex-col overflow-hidden bg-background text-foreground">
-      {/* Reserved visual layer for future wallpaper / personalization */}
+      {/* Reserved visual layer for future wallpaper */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-[42%] size-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
       </div>
@@ -119,22 +160,50 @@ export function FocusMode({
           </p>
         </div>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onExit}
-          title={t.focusMode.exit}
-        >
-          <Minimize2 className="size-4" />
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={
+              onEnterMiniFocus
+            }
+            disabled={
+              !miniFocusSupported
+            }
+            title={
+              miniFocusSupported
+                ? t.miniFocus.enter
+                : t.miniFocus
+                    .unsupported
+            }
+          >
+            <PictureInPicture2 className="size-4" />
 
-          {t.focusMode.exit}
-        </Button>
+            {
+              t.miniFocus.enter
+            }
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onExit}
+            title={
+              t.focusMode.exit
+            }
+          >
+            <Minimize2 className="size-4" />
+
+            {
+              t.focusMode.exit
+            }
+          </Button>
+        </div>
       </header>
 
-      {/* Main focus experience */}
+      {/* Main */}
       <main className="relative flex flex-1 items-center justify-center px-6 pb-16 pt-4">
         <div className="flex w-full max-w-3xl flex-col items-center text-center">
-          {/* Phase badge */}
           <div
             className={cn(
               "flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium",
@@ -143,7 +212,8 @@ export function FocusMode({
                 : "border-rest/25 bg-rest/10 text-rest",
             )}
           >
-            {phase === "focus" ? (
+            {phase ===
+            "focus" ? (
               <Flame className="size-3.5" />
             ) : (
               <Coffee className="size-3.5" />
@@ -152,34 +222,40 @@ export function FocusMode({
             {phaseLabel}
           </div>
 
-          {/* Current task */}
-          <p className="mt-8 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground/70">
-            {t.focusMode.currentTask}
+          <p className="mt-7 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground/55">
+            {
+              t.focusMode
+                .currentTask
+            }
           </p>
 
-          <h1 className="mt-3 max-w-2xl text-balance text-2xl font-semibold tracking-tight md:text-3xl">
-            {selectedTask?.title ?? t.focusMode.noTask}
+          <h1 className="mt-2 max-w-2xl text-balance text-2xl font-semibold tracking-tight md:text-3xl">
+            {selectedTask?.title ??
+              t.focusMode.noTask}
           </h1>
 
-          {/* Timer */}
-          <div className="mt-12 font-mono text-7xl font-semibold tracking-[-0.06em] tabular-nums sm:text-8xl md:text-9xl">
-            {formatClock(remainingSeconds)}
+          <div className="mt-10 font-mono text-7xl font-semibold tracking-[-0.06em] tabular-nums sm:text-8xl md:text-9xl">
+            {formatClock(
+              remainingSeconds,
+            )}
           </div>
 
-          <p
-            className={cn(
-              "mt-4 text-sm font-medium",
-              phase === "focus"
-                ? "text-focus"
-                : "text-rest",
-            )}
-          >
-            {statusLabel}
-          </p>
+          {status !== "running" && (
+            <p
+              className={cn(
+                "mt-4 text-sm font-medium",
+                phase === "focus"
+                  ? "text-focus"
+                  : "text-rest",
+              )}
+            >
+              {statusLabel}
+            </p>
+          )}
 
-          {/* Controls */}
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            {status === "running" ? (
+            {status ===
+            "running" ? (
               <Button
                 size="lg"
                 variant="secondary"
@@ -187,36 +263,56 @@ export function FocusMode({
               >
                 <Pause className="size-4" />
 
-                {t.pomodoro.pause}
+                {
+                  t.pomodoro
+                    .pause
+                }
               </Button>
             ) : (
               <Button
                 size="lg"
-                onClick={handleStart}
-                disabled={!selectedTask}
+                onClick={
+                  handleStart
+                }
+                disabled={
+                  !selectedTask
+                }
               >
                 <Play className="size-4" />
 
-                {status === "paused"
-                  ? t.pomodoro.resume
-                  : t.pomodoro.start}
+                {status ===
+                "paused"
+                  ? t.pomodoro
+                      .resume
+                  : t.pomodoro
+                      .start}
               </Button>
             )}
 
             <Button
               size="lg"
               variant="outline"
-              onClick={handleStop}
-              disabled={status === "idle"}
+              onClick={
+                handleStop
+              }
+              disabled={
+                status === "idle"
+              }
             >
               <Square className="size-4" />
 
-              {t.focusMode.stopSession}
+              {
+                t.focusMode
+                  .stopSession
+              }
             </Button>
           </div>
 
-          <p className="mt-8 max-w-lg text-xs leading-relaxed text-muted-foreground/70">
-            {t.focusMode.exitHint}
+          <p className="mt-8 max-w-lg text-xs leading-relaxed text-muted-foreground/60">
+            {
+              t.focusMode
+                .exitHint
+            }
           </p>
         </div>
       </main>

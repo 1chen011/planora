@@ -1,15 +1,11 @@
-export type Language =
-  | "en"
-  | "zh";
+export type Language = "en" | "zh";
 
 export const translations = {
   en: {
     app: {
       name: "Planora",
-      subtitle:
-        "Daily Work Organizer",
-      loading:
-        "Loading your workspace...",
+      subtitle: "Daily Work Organizer",
+      loading: "Loading your workspace...",
     },
 
     sidebar: {
@@ -21,8 +17,7 @@ export const translations = {
       active: "Pending",
       completed: "Completed",
 
-      todayFocus:
-        "Today's Focus",
+      todayFocus: "Today's Focus",
 
       minutesShort: "min",
 
@@ -37,81 +32,56 @@ export const translations = {
 
     home: {
       greeting: {
-        morning:
-          "Good morning",
+        morning: "Good morning",
 
-        afternoon:
-          "Good afternoon",
+        afternoon: "Good afternoon",
 
-        evening:
-          "Good evening",
+        evening: "Good evening",
       },
 
-      prompt:
-        "What do you want to move forward today?",
+      prompt: "What do you want to move forward today?",
 
-      planDay:
-        "Plan my day",
+      planDay: "Plan my day",
 
-      startFocusing:
-        "Start focusing",
+      startFocusing: "Start focusing",
 
-      currentFocus:
-        "Current Focus",
+      currentFocus: "Current Focus",
 
-      currentFocusSelected:
-        "Continue where you left off.",
+      currentFocusSelected: "Continue where you left off.",
 
-      currentFocusEmpty:
-        "Nothing selected yet.",
+      currentFocusEmpty: "Nothing selected yet.",
 
-      currentFocusEmptyHint:
-        "Choose one thing to move forward.",
+      currentFocusEmptyHint: "Choose one thing to move forward.",
 
-      continueFocus:
-        "Continue Focus",
+      continueFocus: "Continue Focus",
 
-      chooseTask:
-        "Choose a task",
+      chooseTask: "Choose a task",
 
-      running:
-        "Focusing",
+      running: "Focusing",
 
-      paused:
-        "Paused",
+      paused: "Paused",
 
-      ready:
-        "Ready",
+      ready: "Ready",
 
-      today:
-        "Today",
+      today: "Today",
 
-      yesterday:
-        "Yesterday",
+      yesterday: "Yesterday",
 
-      planned:
-        "Planned",
+      planned: "Planned",
 
-      completed:
-        "Completed",
+      completed: "Completed",
 
-      focusSessionsShort:
-        "Focus sessions",
+      focusSessionsShort: "Focus sessions",
 
-      comparison:
-        "Today and Yesterday",
+      comparison: "Today and Yesterday",
 
-      focusSession:
-        "Focus session",
+      focusSession: "Focus session",
 
-      focusSessions:
-        "Focus sessions",
+      focusSessions: "Focus sessions",
 
-      taskCompleted:
-        "Task completed",
+      taskCompleted: "Task completed",
 
-      tasksCompleted:
-        "Tasks completed",
+      tasksCompleted: "Tasks completed",
     },
 
     taskList: {
@@ -119,31 +89,24 @@ export const translations = {
         today: "Today",
         all: "All Tasks",
         active: "Pending",
-        completed:
-          "Completed",
+        completed: "Completed",
       },
 
-      todaySubtitle:
-        "things to move forward",
+      todaySubtitle: "things to move forward",
 
-      activeSubtitle:
-        "tasks to do",
+      activeSubtitle: "tasks to do",
 
-      recordSubtitle:
-        "tasks",
+      recordSubtitle: "tasks",
 
-      addTask:
-        "New Task",
+      addTask: "New Task",
 
       empty: {
         today:
           "Nothing planned for today yet. Choose what you want to move forward.",
 
-        all:
-          "No tasks yet. Add something you want to move forward.",
+        all: "No tasks yet. Add something you want to move forward.",
 
-        active:
-          "Nothing pending. Take a break or decide what comes next.",
+        active: "Nothing pending. Take a break or decide what comes next.",
 
         completed:
           "No completed tasks yet. Your finished work will appear here.",
@@ -151,35 +114,25 @@ export const translations = {
     },
 
     task: {
-      addToToday:
-        "Add to Today",
+      addToToday: "Add to Today",
 
-      removeFromToday:
-        "Remove from Today",
+      removeFromToday: "Remove from Today",
 
-      today:
-        "Today",
+      today: "Today",
 
-      setFocusTask:
-        "Focus on this task",
+      setFocusTask: "Focus on this task",
 
-      edit:
-        "Edit",
+      edit: "Edit",
 
-      delete:
-        "Delete",
+      delete: "Delete",
 
-      toggleComplete:
-        "Toggle completion",
+      toggleComplete: "Toggle completion",
 
-      focused:
-        "Focused",
+      focused: "Focused",
 
-      timerTarget:
-        "Focus task",
+      timerTarget: "Focus task",
 
-      overdue:
-        "Overdue",
+      overdue: "Overdue",
 
       priority: {
         high: "High",
@@ -196,632 +149,468 @@ export const translations = {
     },
 
     dialog: {
-      newTask:
-        "New Task",
+      newTask: "New Task",
 
-      editTask:
-        "Edit Task",
+      editTask: "Edit Task",
 
       createDescription:
         "Capture the work first. You can organize the details later.",
 
-      editDescription:
-        "Update the task details. Changes are saved locally.",
+      editDescription: "Update the task details. Changes are saved locally.",
 
-      title:
-        "Task title",
+      title: "Task title",
 
-      titlePlaceholder:
-        "e.g. Update Planora localization",
+      titlePlaceholder: "e.g. Update Planora localization",
 
-      titleRequired:
-        "Please enter a task title",
+      titleRequired: "Please enter a task title",
 
-      note:
-        "Notes",
+      note: "Notes",
 
       notePlaceholder:
         "Context, next step, links, or acceptance criteria (optional)",
 
-      deadline:
-        "Deadline",
+      deadline: "Deadline",
 
-      priority:
-        "Priority",
+      priority: "Priority",
 
-      cancel:
-        "Cancel",
+      cancel: "Cancel",
 
-      create:
-        "Create Task",
+      create: "Create Task",
 
-      save:
-        "Save Changes",
+      save: "Save Changes",
     },
 
     pomodoro: {
-      title:
-        "Focus Timer",
+      title: "Focus Timer",
 
-      settings:
-        "Timer settings",
+      settings: "Timer settings",
 
-      focusMinutes:
-        "Focus (minutes)",
+      focusMinutes: "Focus (minutes)",
 
-      breakMinutes:
-        "Break (minutes)",
+      breakMinutes: "Break (minutes)",
 
-      taskLabel:
-        "Focus task",
+      taskLabel: "Focus task",
 
-      chooseTask:
-        "Choose a pending task",
+      chooseTask: "Choose a pending task",
 
-      noTasks:
-        "No pending tasks",
+      noTasks: "No pending tasks",
 
-      focus:
-        "Focus",
+      focus: "Focus",
 
-      break:
-        "Break",
+      break: "Break",
 
-      runningFocus:
-        "Focusing",
+      runningFocus: "Focusing",
 
-      runningBreak:
-        "On a break",
+      runningBreak: "On a break",
 
-      paused:
-        "Paused",
+      paused: "Paused",
 
-      ready:
-        "Ready",
+      ready: "Ready",
 
-      taskPrefix:
-        "Working on:",
+      taskPrefix: "Working on:",
 
-      chooseFirst:
-        "Choose a task to begin",
+      chooseFirst: "Choose a task to begin",
 
-      pause:
-        "Pause",
+      pause: "Pause",
 
-      resume:
-        "Resume",
+      resume: "Resume",
 
-      start:
-        "Start",
+      start: "Start",
 
-      stop:
-        "Stop",
+      stop: "Stop",
 
-      todayLog:
-        "Today's Focus Log",
+      todayLog: "Today's Focus Log",
 
-      noRecords:
-        "No focus sessions yet today.",
+      noRecords: "No focus sessions yet today.",
 
-      noRecordsHint:
-        "Complete a focus session to build your daily log.",
+      noRecordsHint: "Complete a focus session to build your daily log.",
 
-      endedEarly:
-        "Stopped early",
+      endedEarly: "Stopped early",
 
-      chooseTaskWarning:
-        "Choose a task before starting.",
+      chooseTaskWarning: "Choose a task before starting.",
 
-      stoppedMessage:
-        "Focus time recorded.",
+      stoppedMessage: "Focus time recorded.",
 
-      focusFinished:
-        "Focus session complete. Time for a short break.",
+      focusFinished: "Focus session complete. Time for a short break.",
 
-      breakFinished:
-        "Break complete. Ready for the next focus session.",
+      breakFinished: "Break complete. Ready for the next focus session.",
 
-      focusRecorded:
-        "Your focus time was added to this task.",
+      focusRecorded: "Your focus time was added to this task.",
 
-      deletedTask:
-        "Deleted task",
+      deletedTask: "Deleted task",
     },
 
     focusMode: {
-      title:
-        "Focus Mode",
+      title: "Focus Mode",
 
-      enter:
-        "Focus Mode",
+      enter: "Focus Mode",
 
-      exit:
-        "Exit Focus Mode",
+      exit: "Exit Focus Mode",
 
       exitHint:
         "Exit returns you to the workspace. Your timer keeps running until you pause or stop it.",
 
-      currentTask:
-        "Current task",
+      currentTask: "Current task",
 
-      noTask:
-        "Choose a task to focus on",
+      noTask: "Choose a task to focus on",
 
-      focusPhase:
-        "Focus",
+      focusPhase: "Focus",
 
-      breakPhase:
-        "Break",
+      breakPhase: "Break",
 
-      stopSession:
-        "Stop Session",
+      stopSession: "Stop Session",
+    },
+
+    miniFocus: {
+      enter: "Mini Focus",
+
+      close: "Close Mini Focus",
+
+      returnToFocus: "Return",
+
+      unsupported: "Mini Focus isn't supported in this browser yet.",
+
+      openFailed:
+        "Mini Focus couldn't open. Try again from the Focus Mode button.",
     },
 
     progress: {
-      title:
-        "Today's Progress",
+      title: "Today's Progress",
 
-      focused:
-        "Focused",
+      focused: "Focused",
 
-      session:
-        "Focus session",
+      session: "Focus session",
 
-      sessions:
-        "Focus sessions",
+      sessions: "Focus sessions",
 
-      completed:
-        "Tasks completed",
+      completed: "Tasks completed",
 
       noProgress:
         "Start with one task. Your work will become visible here as the day moves forward.",
     },
 
     toast: {
-      created:
-        "Task created",
+      created: "Task created",
 
-      updated:
-        "Task updated",
+      updated: "Task updated",
 
-      deleted:
-        "Task deleted",
+      deleted: "Task deleted",
 
-      addedToToday:
-        "Added to Today",
+      addedToToday: "Added to Today",
 
-      removedFromToday:
-        "Removed from Today",
+      removedFromToday: "Removed from Today",
     },
   },
 
   zh: {
     app: {
       name: "Planora",
-      subtitle:
-        "日常工作整理工具",
-      loading:
-        "正在加载你的工作空间...",
+      subtitle: "日常工作整理工具",
+      loading: "正在加载你的工作空间...",
     },
 
     sidebar: {
       home: "主页",
       today: "今天",
 
-      tasksSection:
-        "任务",
+      tasksSection: "任务",
 
-      allTasks:
-        "全部任务",
+      allTasks: "全部任务",
 
-      active:
-        "待完成",
+      active: "待完成",
 
-      completed:
-        "已完成",
+      completed: "已完成",
 
-      todayFocus:
-        "今日专注",
+      todayFocus: "今日专注",
 
-      minutesShort:
-        "分钟",
+      minutesShort: "分钟",
 
-      appearance:
-        "外观",
+      appearance: "外观",
 
-      dark:
-        "深色",
+      dark: "深色",
 
-      light:
-        "浅色",
+      light: "浅色",
 
-      language:
-        "语言",
+      language: "语言",
 
-      english:
-        "English",
+      english: "English",
 
-      chinese:
-        "中文",
+      chinese: "中文",
     },
 
     home: {
       greeting: {
-        morning:
-          "早上好",
+        morning: "早上好",
 
-        afternoon:
-          "下午好",
+        afternoon: "下午好",
 
-        evening:
-          "晚上好",
+        evening: "晚上好",
       },
 
-      prompt:
-        "今天你最想推进什么？",
+      prompt: "今天你最想推进什么？",
 
-      planDay:
-        "规划今天",
+      planDay: "规划今天",
 
-      startFocusing:
-        "开始专注",
+      startFocusing: "开始专注",
 
-      currentFocus:
-        "当前专注",
+      currentFocus: "当前专注",
 
-      currentFocusSelected:
-        "继续刚才的进度。",
+      currentFocusSelected: "继续刚才的进度。",
 
-      currentFocusEmpty:
-        "还没有选择专注任务。",
+      currentFocusEmpty: "还没有选择专注任务。",
 
-      currentFocusEmptyHint:
-        "选择一件你真正想推进的事情。",
+      currentFocusEmptyHint: "选择一件你真正想推进的事情。",
 
-      continueFocus:
-        "继续专注",
+      continueFocus: "继续专注",
 
-      chooseTask:
-        "选择任务",
+      chooseTask: "选择任务",
 
-      running:
-        "专注中",
+      running: "专注中",
 
-      paused:
-        "已暂停",
+      paused: "已暂停",
 
-      ready:
-        "准备开始",
+      ready: "准备开始",
 
-      today:
-        "今天",
+      today: "今天",
 
-      yesterday:
-        "昨天",
+      yesterday: "昨天",
 
-      planned:
-        "已计划",
+      planned: "已计划",
 
-      completed:
-        "已完成",
+      completed: "已完成",
 
-      focusSessionsShort:
-        "专注次数",
+      focusSessionsShort: "专注次数",
 
-      comparison:
-        "今天与昨天",
+      comparison: "今天与昨天",
 
-      focusSession:
-        "专注次数",
+      focusSession: "专注次数",
 
-      focusSessions:
-        "专注次数",
+      focusSessions: "专注次数",
 
-      taskCompleted:
-        "完成任务",
+      taskCompleted: "完成任务",
 
-      tasksCompleted:
-        "完成任务",
+      tasksCompleted: "完成任务",
     },
 
     taskList: {
       titles: {
         today: "今天",
 
-        all:
-          "全部任务",
+        all: "全部任务",
 
-        active:
-          "待完成",
+        active: "待完成",
 
-        completed:
-          "已完成",
+        completed: "已完成",
       },
 
-      todaySubtitle:
-        "件今天想推进的事情",
+      todaySubtitle: "件今天想推进的事情",
 
-      activeSubtitle:
-        "件待处理任务",
+      activeSubtitle: "件待处理任务",
 
-      recordSubtitle:
-        "项任务",
+      recordSubtitle: "项任务",
 
-      addTask:
-        "新增任务",
+      addTask: "新增任务",
 
       empty: {
-        today:
-          "今天还没有安排任务。选择几件你真正想推进的事情吧。",
+        today: "今天还没有安排任务。选择几件你真正想推进的事情吧。",
 
-        all:
-          "还没有任务。先记下你想推进的事情。",
+        all: "还没有任务。先记下你想推进的事情。",
 
-        active:
-          "没有待完成任务。休息一下，或者想想下一步。",
+        active: "没有待完成任务。休息一下，或者想想下一步。",
 
-        completed:
-          "还没有已完成任务。完成的工作会出现在这里。",
+        completed: "还没有已完成任务。完成的工作会出现在这里。",
       },
     },
 
     task: {
-      addToToday:
-        "加入今天",
+      addToToday: "加入今天",
 
-      removeFromToday:
-        "移出今天",
+      removeFromToday: "移出今天",
 
-      today:
-        "今天",
+      today: "今天",
 
-      setFocusTask:
-        "专注这项任务",
+      setFocusTask: "专注这项任务",
 
-      edit:
-        "编辑",
+      edit: "编辑",
 
-      delete:
-        "删除",
+      delete: "删除",
 
-      toggleComplete:
-        "切换完成状态",
+      toggleComplete: "切换完成状态",
 
-      focused:
-        "累计专注",
+      focused: "累计专注",
 
-      timerTarget:
-        "当前专注",
+      timerTarget: "当前专注",
 
-      overdue:
-        "已逾期",
+      overdue: "已逾期",
 
       priority: {
-        high:
-          "高",
+        high: "高",
 
-        medium:
-          "中",
+        medium: "中",
 
-        low:
-          "低",
+        low: "低",
       },
 
       time: {
-        minute:
-          "分钟",
+        minute: "分钟",
 
-        minutes:
-          "分钟",
+        minutes: "分钟",
 
-        hour:
-          "小时",
+        hour: "小时",
 
-        hours:
-          "小时",
+        hours: "小时",
       },
     },
 
     dialog: {
-      newTask:
-        "新增任务",
+      newTask: "新增任务",
 
-      editTask:
-        "编辑任务",
+      editTask: "编辑任务",
 
-      createDescription:
-        "先把事情记下来，不需要现在就把所有细节规划完整。",
+      createDescription: "先把事情记下来，不需要现在就把所有细节规划完整。",
 
-      editDescription:
-        "更新任务信息，修改会保存到本地。",
+      editDescription: "更新任务信息，修改会保存到本地。",
 
-      title:
-        "任务标题",
+      title: "任务标题",
 
-      titlePlaceholder:
-        "例如：更新 Planora 多语言",
+      titlePlaceholder: "例如：更新 Planora 多语言",
 
-      titleRequired:
-        "请输入任务标题",
+      titleRequired: "请输入任务标题",
 
-      note:
-        "备注",
+      note: "备注",
 
-      notePlaceholder:
-        "上下文、下一步、链接或验收标准（可选）",
+      notePlaceholder: "上下文、下一步、链接或验收标准（可选）",
 
-      deadline:
-        "截止日期",
+      deadline: "截止日期",
 
-      priority:
-        "优先级",
+      priority: "优先级",
 
-      cancel:
-        "取消",
+      cancel: "取消",
 
-      create:
-        "创建任务",
+      create: "创建任务",
 
-      save:
-        "保存修改",
+      save: "保存修改",
     },
 
     pomodoro: {
-      title:
-        "专注计时",
+      title: "专注计时",
 
-      settings:
-        "计时设置",
+      settings: "计时设置",
 
-      focusMinutes:
-        "专注时长（分钟）",
+      focusMinutes: "专注时长（分钟）",
 
-      breakMinutes:
-        "休息时长（分钟）",
+      breakMinutes: "休息时长（分钟）",
 
-      taskLabel:
-        "专注任务",
+      taskLabel: "专注任务",
 
-      chooseTask:
-        "选择一条待完成任务",
+      chooseTask: "选择一条待完成任务",
 
-      noTasks:
-        "暂无待完成任务",
+      noTasks: "暂无待完成任务",
 
-      focus:
-        "专注",
+      focus: "专注",
 
-      break:
-        "休息",
+      break: "休息",
 
-      runningFocus:
-        "专注进行中",
+      runningFocus: "专注进行中",
 
-      runningBreak:
-        "休息进行中",
+      runningBreak: "休息进行中",
 
-      paused:
-        "已暂停",
+      paused: "已暂停",
 
-      ready:
-        "准备开始",
+      ready: "准备开始",
 
-      taskPrefix:
-        "正在进行：",
+      taskPrefix: "正在进行：",
 
-      chooseFirst:
-        "选择一条任务开始",
+      chooseFirst: "选择一条任务开始",
 
-      pause:
-        "暂停",
+      pause: "暂停",
 
-      resume:
-        "继续",
+      resume: "继续",
 
-      start:
-        "开始",
+      start: "开始",
 
-      stop:
-        "停止",
+      stop: "停止",
 
-      todayLog:
-        "今日专注记录",
+      todayLog: "今日专注记录",
 
-      noRecords:
-        "今天还没有专注记录。",
+      noRecords: "今天还没有专注记录。",
 
-      noRecordsHint:
-        "完成一次专注后，你今天的投入会记录在这里。",
+      noRecordsHint: "完成一次专注后，你今天的投入会记录在这里。",
 
-      endedEarly:
-        "提前结束",
+      endedEarly: "提前结束",
 
-      chooseTaskWarning:
-        "请先选择一条任务。",
+      chooseTaskWarning: "请先选择一条任务。",
 
-      stoppedMessage:
-        "本次专注时间已记录。",
+      stoppedMessage: "本次专注时间已记录。",
 
-      focusFinished:
-        "专注时段结束，休息一下吧。",
+      focusFinished: "专注时段结束，休息一下吧。",
 
-      breakFinished:
-        "休息结束，可以开始下一段专注了。",
+      breakFinished: "休息结束，可以开始下一段专注了。",
 
-      focusRecorded:
-        "本次投入已记录到任务。",
+      focusRecorded: "本次投入已记录到任务。",
 
-      deletedTask:
-        "已删除的任务",
+      deletedTask: "已删除的任务",
     },
 
     focusMode: {
-      title:
-        "专注模式",
+      title: "专注模式",
 
-      enter:
-        "专注模式",
+      enter: "专注模式",
 
-      exit:
-        "退出专注模式",
+      exit: "退出专注模式",
 
-      exitHint:
-        "退出只会返回工作空间；除非你暂停或停止，计时会继续进行。",
+      exitHint: "退出只会返回工作空间；除非你暂停或停止，计时会继续进行。",
 
-      currentTask:
-        "当前任务",
+      currentTask: "当前任务",
 
-      noTask:
-        "请选择一项任务开始专注",
+      noTask: "请选择一项任务开始专注",
 
-      focusPhase:
-        "专注",
+      focusPhase: "专注",
 
-      breakPhase:
-        "休息",
+      breakPhase: "休息",
 
-      stopSession:
-        "结束本次专注",
+      stopSession: "结束本次专注",
+    },
+
+    miniFocus: {
+      enter: "迷你专注",
+
+      close: "关闭迷你专注",
+
+      returnToFocus: "返回",
+
+      unsupported: "当前浏览器暂不支持迷你专注模式。",
+
+      openFailed: "无法打开迷你专注，请从专注模式中重新尝试。",
     },
 
     progress: {
-      title:
-        "今日进展",
+      title: "今日进展",
 
-      focused:
-        "专注时间",
+      focused: "专注时间",
 
-      session:
-        "专注次数",
+      session: "专注次数",
 
-      sessions:
-        "专注次数",
+      sessions: "专注次数",
 
-      completed:
-        "完成任务",
+      completed: "完成任务",
 
       noProgress:
         "从一件事情开始。随着一天推进，你真正完成的工作会逐渐出现在这里。",
     },
 
     toast: {
-      created:
-        "任务已创建",
+      created: "任务已创建",
 
-      updated:
-        "任务已更新",
+      updated: "任务已更新",
 
-      deleted:
-        "任务已删除",
+      deleted: "任务已删除",
 
-      addedToToday:
-        "已加入今天",
+      addedToToday: "已加入今天",
 
-      removedFromToday:
-        "已移出今天",
+      removedFromToday: "已移出今天",
     },
   },
 } as const;
 
-export type Translation =
-  (typeof translations)[Language];
+export type Translation = (typeof translations)[Language];
