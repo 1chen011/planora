@@ -34,6 +34,8 @@ export type TaskFormValues = Pick<
 
 export type TaskFilter = "today" | "all" | "active" | "completed";
 
+export type AppView = "home" | TaskFilter;
+
 export type PomodoroPhase = "focus" | "break";
 
 export type PomodoroSession = {

@@ -9,6 +9,7 @@ export const translations = {
     },
 
     sidebar: {
+      home: "Home",
       today: "Today",
 
       tasksSection: "Tasks",
@@ -26,6 +27,41 @@ export const translations = {
       language: "Language",
       english: "English",
       chinese: "中文",
+    },
+
+    home: {
+      greeting: {
+        morning: "Good morning",
+        afternoon: "Good afternoon",
+        evening: "Good evening",
+      },
+
+      prompt: "What do you want to move forward today?",
+      planDay: "Plan my day",
+      startFocusing: "Start focusing",
+
+      currentFocus: "Current Focus",
+      currentFocusSelected: "Continue where you left off.",
+      currentFocusEmpty: "Nothing selected yet.",
+      currentFocusEmptyHint: "Choose one thing to move forward.",
+      continueFocus: "Continue Focus",
+      chooseTask: "Choose a task",
+
+      running: "Focusing",
+      paused: "Paused",
+      ready: "Ready",
+
+      today: "Today",
+      yesterday: "Yesterday",
+      planned: "Planned",
+      completed: "Completed",
+      focusSessionsShort: "Focus sessions",
+      comparison: "Today and Yesterday",
+
+      focusSession: "Focus session",
+      focusSessions: "Focus sessions",
+      taskCompleted: "Task completed",
+      tasksCompleted: "Tasks completed",
     },
 
     taskList: {
@@ -153,17 +189,17 @@ export const translations = {
 
       deletedTask: "Deleted task",
     },
+
     progress: {
       title: "Today's Progress",
 
       focused: "Focused",
-
       session: "Focus session",
       sessions: "Focus sessions",
-
       completed: "Tasks completed",
 
-      noProgress: "Your progress will appear here throughout the day.",
+      noProgress:
+        "Start with one task. Your work will become visible here as the day moves forward.",
     },
 
     toast: {
@@ -184,6 +220,7 @@ export const translations = {
     },
 
     sidebar: {
+      home: "主页",
       today: "今天",
 
       tasksSection: "任务",
@@ -201,6 +238,41 @@ export const translations = {
       language: "语言",
       english: "English",
       chinese: "中文",
+    },
+
+    home: {
+      greeting: {
+        morning: "早上好",
+        afternoon: "下午好",
+        evening: "晚上好",
+      },
+
+      prompt: "今天你最想推进什么？",
+      planDay: "规划今天",
+      startFocusing: "开始专注",
+
+      currentFocus: "当前专注",
+      currentFocusSelected: "继续刚才的进度。",
+      currentFocusEmpty: "还没有选择专注任务。",
+      currentFocusEmptyHint: "选择一件你真正想推进的事情。",
+      continueFocus: "继续专注",
+      chooseTask: "选择任务",
+
+      running: "专注中",
+      paused: "已暂停",
+      ready: "准备开始",
+
+      today: "今天",
+      yesterday: "昨天",
+      planned: "已计划",
+      completed: "已完成",
+      focusSessionsShort: "专注次数",
+      comparison: "今天与昨天",
+
+      focusSession: "专注次数",
+      focusSessions: "专注次数",
+      taskCompleted: "完成任务",
+      tasksCompleted: "完成任务",
     },
 
     taskList: {
@@ -350,8 +422,10 @@ export const translations = {
 
       completed: "完成任务",
 
-      noProgress: "今天的进展会随着你的工作逐渐出现在这里。",
+      noProgress:
+        "从一件事情开始。随着一天推进，你真正完成的工作会逐渐出现在这里。",
     },
+
     toast: {
       created: "任务已创建",
       updated: "任务已更新",

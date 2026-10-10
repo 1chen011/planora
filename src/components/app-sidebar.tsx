@@ -6,6 +6,7 @@ import {
   CalendarDays,
   CheckCircle2,
   CircleDashed,
+  Home,
   Languages,
   ListTodo,
   Moon,
@@ -19,7 +20,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/i18n/language-context";
 
 import type { Language } from "@/i18n/translation";
-import type { TaskFilter } from "@/types/task";
+import type { AppView, TaskFilter } from "@/types/task";
 
 const TASK_NAV_ITEMS: {
   key: Exclude<TaskFilter, "today">;
@@ -40,14 +41,14 @@ const TASK_NAV_ITEMS: {
 ];
 
 export function AppSidebar({
-  filter,
-  onFilterChange,
+  view,
+  onViewChange,
   counts,
   todayFocusMinutes,
 }: {
-  filter: TaskFilter;
+  view: AppView;
 
-  onFilterChange: (filter: TaskFilter) => void;
+  onViewChange: (view: AppView) => void;
 
   counts: Record<TaskFilter, number>;
 
@@ -77,7 +78,8 @@ export function AppSidebar({
     setTheme(event.target.value);
   }
 
-  const todayActive = filter === "today";
+  const homeActive = view === "home";
+  const todayActive = view === "today";
 
   const currentTheme = mounted ? (theme ?? "dark") : "dark";
 
@@ -98,32 +100,49 @@ export function AppSidebar({
         </div>
       </div>
 
-      {/* Today workspace */}
-      <button
-        type="button"
-        onClick={() => onFilterChange("today")}
-        className={cn(
-          "flex items-center justify-between rounded-md px-2.5 py-2 text-sm transition-colors",
-          todayActive
-            ? "bg-primary/15 font-medium text-primary"
-            : "text-muted-foreground hover:bg-accent hover:text-foreground",
-        )}
-      >
-        <span className="flex items-center gap-2">
-          <CalendarDays className="size-4" />
-
-          {t.sidebar.today}
-        </span>
-
-        <span
+      {/* Workspace */}
+      <nav className="flex flex-col gap-1">
+        <button
+          type="button"
+          onClick={() => onViewChange("home")}
           className={cn(
-            "rounded-full px-1.5 text-xs tabular-nums",
-            todayActive ? "text-primary" : "text-muted-foreground",
+            "flex items-center justify-between rounded-md px-2.5 py-2 text-sm transition-colors",
+            homeActive
+              ? "bg-primary/15 font-medium text-primary"
+              : "text-muted-foreground hover:bg-accent hover:text-foreground",
           )}
         >
-          {counts.today}
-        </span>
-      </button>
+          <span className="flex items-center gap-2">
+            <Home className="size-4" />
+            {t.sidebar.home}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onViewChange("today")}
+          className={cn(
+            "flex items-center justify-between rounded-md px-2.5 py-2 text-sm transition-colors",
+            todayActive
+              ? "bg-primary/15 font-medium text-primary"
+              : "text-muted-foreground hover:bg-accent hover:text-foreground",
+          )}
+        >
+          <span className="flex items-center gap-2">
+            <CalendarDays className="size-4" />
+            {t.sidebar.today}
+          </span>
+
+          <span
+            className={cn(
+              "rounded-full px-1.5 text-xs tabular-nums",
+              todayActive ? "text-primary" : "text-muted-foreground",
+            )}
+          >
+            {counts.today}
+          </span>
+        </button>
+      </nav>
 
       {/* Task repository */}
       <div className="mt-5">
@@ -133,13 +152,13 @@ export function AppSidebar({
 
         <nav className="flex flex-col gap-1">
           {TASK_NAV_ITEMS.map(({ key, icon: Icon }) => {
-            const active = filter === key;
+            const active = view === key;
 
             return (
               <button
                 key={key}
                 type="button"
-                onClick={() => onFilterChange(key)}
+                onClick={() => onViewChange(key)}
                 className={cn(
                   "flex items-center justify-between rounded-md px-2.5 py-2 text-sm transition-colors",
                   active
@@ -149,7 +168,6 @@ export function AppSidebar({
               >
                 <span className="flex items-center gap-2">
                   <Icon className="size-4" />
-
                   {taskLabels[key]}
                 </span>
 
@@ -169,7 +187,6 @@ export function AppSidebar({
 
       {/* Bottom controls */}
       <div className="mt-auto space-y-3">
-        {/* Today's focus */}
         <div className="rounded-lg border border-border bg-secondary/40 p-3">
           <p className="text-[11px] text-muted-foreground">
             {t.sidebar.todayFocus}
@@ -184,7 +201,6 @@ export function AppSidebar({
           </p>
         </div>
 
-        {/* Appearance */}
         <div className="space-y-1.5">
           <div className="flex items-center gap-1.5 px-1 text-[11px] text-muted-foreground">
             {currentTheme === "light" ? (
@@ -203,16 +219,13 @@ export function AppSidebar({
             className="h-9 w-full rounded-md border border-border bg-background px-2.5 text-xs text-foreground outline-none transition-colors hover:bg-accent focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
           >
             <option value="dark">{t.sidebar.dark}</option>
-
             <option value="light">{t.sidebar.light}</option>
           </select>
         </div>
 
-        {/* Language */}
         <div className="space-y-1.5">
           <div className="flex items-center gap-1.5 px-1 text-[11px] text-muted-foreground">
             <Languages className="size-3.5" />
-
             <span>{t.sidebar.language}</span>
           </div>
 
@@ -222,7 +235,6 @@ export function AppSidebar({
             className="h-9 w-full rounded-md border border-border bg-background px-2.5 text-xs text-foreground outline-none transition-colors hover:bg-accent focus:ring-2 focus:ring-ring"
           >
             <option value="en">{t.sidebar.english}</option>
-
             <option value="zh">{t.sidebar.chinese}</option>
           </select>
         </div>
