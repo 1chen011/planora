@@ -5,20 +5,26 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { AppSidebar } from "@/components/app-sidebar";
+import { FocusMode } from "@/components/focus-mode";
 import { HomeDashboard } from "@/components/home-dashboard";
+import { MiniFocus } from "@/components/mini-focus";
 import { PomodoroTimer } from "@/components/pomodoro-timer";
 import { TaskFormDialog } from "@/components/task-form-dialog";
 import { TaskList } from "@/components/task-list";
 
+import { useMiniFocus } from "@/hooks/use-mini-focus";
 import { usePomodoro } from "@/hooks/use-pomodoro";
 import { useTasks } from "@/hooks/use-tasks";
+
 import { useLanguage } from "@/i18n/language-context";
 
 import type { AppView, Task, TaskFilter } from "@/types/task";
 
 function getLocalDateKey(date = new Date()) {
   const year = date.getFullYear();
+
   const month = String(date.getMonth() + 1).padStart(2, "0");
+
   const day = String(date.getDate()).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
@@ -55,9 +61,15 @@ export default function Home() {
 
   const pomodoro = usePomodoro(tasks);
 
+  const miniFocus = useMiniFocus();
+
   const [view, setView] = useState<AppView>("home");
+
   const [dialogOpen, setDialogOpen] = useState(false);
+
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+
+  const [focusModeOpen, setFocusModeOpen] = useState(false);
 
   useEffect(() => {
     if (!pomodoro.lastEvent || pomodoro.lastEvent.type !== "completed") {
@@ -76,18 +88,22 @@ export default function Home() {
 
   function openAddDialog() {
     setEditingTask(null);
+
     setDialogOpen(true);
   }
 
   function openEditDialog(task: Task) {
     setEditingTask(task);
+
     setDialogOpen(true);
   }
 
   function handleSubmit(values: Parameters<typeof addTask>[0]) {
     if (editingTask) {
       updateTask(editingTask.id, values);
+
       toast.success(t.toast.updated);
+
       return;
     }
 
@@ -110,6 +126,7 @@ export default function Home() {
 
   function handleToggleToday(task: Task) {
     const todayKey = getLocalDateKey();
+
     const isPlannedToday = task.plannedDate === todayKey;
 
     toggleToday(task.id);
@@ -117,8 +134,46 @@ export default function Home() {
     toast(isPlannedToday ? t.toast.removedFromToday : t.toast.addedToToday);
   }
 
+  function handleStartFocusFromHome() {
+    if (pomodoro.selectedTask) {
+      setFocusModeOpen(true);
+
+      return;
+    }
+
+    setView("today");
+  }
+
+  async function handleEnterMiniFocus() {
+    const result = await miniFocus.open();
+
+    if (result === "unsupported") {
+      toast.warning(t.miniFocus.unsupported);
+
+      return;
+    }
+
+    if (result === "failed") {
+      toast.warning(t.miniFocus.openFailed);
+
+      return;
+    }
+
+    setFocusModeOpen(false);
+  }
+
+  function handleReturnToFocusMode() {
+    miniFocus.focusMainWindow();
+
+    setFocusModeOpen(true);
+
+    miniFocus.close();
+  }
+
   const now = new Date();
+
   const yesterday = new Date(now);
+
   yesterday.setDate(yesterday.getDate() - 1);
 
   const todayKey = getLocalDateKey(now);
@@ -163,6 +218,7 @@ export default function Home() {
   }
 
   const isTaskView = view !== "home";
+
   const taskFilter = isTaskView ? (view as TaskFilter) : null;
 
   return (
@@ -182,15 +238,18 @@ export default function Home() {
             remainingSeconds={pomodoro.remainingSeconds}
             today={{
               planned: todayPlannedTasks,
+
               completed: todayCompletedTasks,
+
               focusSessions: todayFocusSessions.length,
             }}
             yesterday={{
               completed: yesterdayCompletedTasks,
+
               focusSessions: yesterdayFocusSessions.length,
             }}
             onPlanDay={() => setView("today")}
-            onStartFocus={() => setView("today")}
+            onStartFocus={handleStartFocusFromHome}
           />
         ) : (
           taskFilter && (
@@ -207,7 +266,9 @@ export default function Home() {
               onSelectForTimer={pomodoro.selectTask}
               todayProgress={{
                 focusMinutes: todayFocusMinutes,
+
                 focusSessions: todayFocusSessions.length,
+
                 completedTasks: todayCompletedTasks,
               }}
             />
@@ -216,8 +277,27 @@ export default function Home() {
       </main>
 
       {view !== "home" && (
-        <PomodoroTimer pomodoro={pomodoro} activeTasks={activeTasks} />
+        <PomodoroTimer
+          pomodoro={pomodoro}
+          activeTasks={activeTasks}
+          onEnterFocusMode={() => setFocusModeOpen(true)}
+        />
       )}
+
+      {focusModeOpen && pomodoro.selectedTask && (
+        <FocusMode
+          pomodoro={pomodoro}
+          miniFocusSupported={miniFocus.supported}
+          onEnterMiniFocus={handleEnterMiniFocus}
+          onExit={() => setFocusModeOpen(false)}
+        />
+      )}
+
+      <MiniFocus
+        portalRoot={miniFocus.portalRoot}
+        pomodoro={pomodoro}
+        onReturnToFocusMode={handleReturnToFocusMode}
+      />
 
       <TaskFormDialog
         open={dialogOpen}

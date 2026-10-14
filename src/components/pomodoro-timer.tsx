@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import {
   Coffee,
   Flame,
+  Maximize2,
   Pause,
   Play,
   Settings2,
@@ -39,20 +40,21 @@ import type { usePomodoro } from "@/hooks/use-pomodoro";
 import type { Task } from "@/types/task";
 
 const RADIUS = 78;
+
 const CIRCUMFERENCE =
   2 * Math.PI * RADIUS;
 
 function formatClock(
-  totalSeconds: number
+  totalSeconds: number,
 ) {
   const minutes = Math.floor(
-    totalSeconds / 60
+    totalSeconds / 60,
   )
     .toString()
     .padStart(2, "0");
 
   const seconds = Math.floor(
-    totalSeconds % 60
+    totalSeconds % 60,
   )
     .toString()
     .padStart(2, "0");
@@ -62,10 +64,10 @@ function formatClock(
 
 function formatTime(
   iso: string,
-  language: Language
+  language: Language,
 ) {
   return new Date(
-    iso
+    iso,
   ).toLocaleTimeString(
     language === "zh"
       ? "zh-CN"
@@ -73,18 +75,22 @@ function formatTime(
     {
       hour: "2-digit",
       minute: "2-digit",
-    }
+    },
   );
 }
 
 export function PomodoroTimer({
   pomodoro,
   activeTasks,
+  onEnterFocusMode,
 }: {
   pomodoro: ReturnType<
     typeof usePomodoro
   >;
+
   activeTasks: Task[];
+
+  onEnterFocusMode: () => void;
 }) {
   const {
     language,
@@ -123,18 +129,23 @@ export function PomodoroTimer({
     [
       remainingSeconds,
       phaseDurationSeconds,
-    ]
+    ],
   );
 
-  const timelineSessions = useMemo(
-    () =>
-      [...todaySessions].sort(
-        (a, b) =>
-          new Date(a.startedAt).getTime() -
-          new Date(b.startedAt).getTime(),
-      ),
-    [todaySessions],
-  );
+  const timelineSessions =
+    useMemo(
+      () =>
+        [...todaySessions].sort(
+          (a, b) =>
+            new Date(
+              a.startedAt,
+            ).getTime() -
+            new Date(
+              b.startedAt,
+            ).getTime(),
+        ),
+      [todaySessions],
+    );
 
   const phaseColor =
     phase === "focus"
@@ -147,7 +158,8 @@ export function PomodoroTimer({
   function handleStart() {
     if (!canStart) {
       toast.warning(
-        t.pomodoro.chooseTaskWarning
+        t.pomodoro
+          .chooseTaskWarning,
       );
 
       return;
@@ -164,12 +176,14 @@ export function PomodoroTimer({
     stopEarly();
 
     toast.info(
-      t.pomodoro.stoppedMessage
+      t.pomodoro
+        .stoppedMessage,
     );
   }
 
   return (
     <aside className="flex h-full w-80 shrink-0 flex-col gap-4 overflow-y-auto scrollbar-thin border-l border-border bg-card/40 p-4">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold">
           {t.pomodoro.title}
@@ -181,15 +195,19 @@ export function PomodoroTimer({
           className="size-7"
           onClick={() =>
             setSettingsOpen(
-              (current) => !current
+              (current) =>
+                !current,
             )
           }
-          title={t.pomodoro.settings}
+          title={
+            t.pomodoro.settings
+          }
         >
           <Settings2 className="size-3.5" />
         </Button>
       </div>
 
+      {/* Settings */}
       {settingsOpen && (
         <div className="grid grid-cols-2 gap-3 rounded-lg border border-border bg-secondary/30 p-3">
           <div className="grid gap-1">
@@ -197,7 +215,10 @@ export function PomodoroTimer({
               htmlFor="focus-minutes"
               className="text-xs"
             >
-              {t.pomodoro.focusMinutes}
+              {
+                t.pomodoro
+                  .focusMinutes
+              }
             </Label>
 
             <Input
@@ -211,16 +232,19 @@ export function PomodoroTimer({
               disabled={
                 status !== "idle"
               }
-              onChange={(event) =>
+              onChange={(
+                event,
+              ) =>
                 updateSettings({
                   ...settings,
+
                   focusMinutes:
                     Math.max(
                       1,
                       Number(
                         event.target
-                          .value
-                      ) || 1
+                          .value,
+                      ) || 1,
                     ),
                 })
               }
@@ -232,7 +256,10 @@ export function PomodoroTimer({
               htmlFor="break-minutes"
               className="text-xs"
             >
-              {t.pomodoro.breakMinutes}
+              {
+                t.pomodoro
+                  .breakMinutes
+              }
             </Label>
 
             <Input
@@ -246,16 +273,19 @@ export function PomodoroTimer({
               disabled={
                 status !== "idle"
               }
-              onChange={(event) =>
+              onChange={(
+                event,
+              ) =>
                 updateSettings({
                   ...settings,
+
                   breakMinutes:
                     Math.max(
                       1,
                       Number(
                         event.target
-                          .value
-                      ) || 1
+                          .value,
+                      ) || 1,
                     ),
                 })
               }
@@ -264,9 +294,13 @@ export function PomodoroTimer({
         </div>
       )}
 
+      {/* Task selector */}
       <div className="grid gap-1.5">
         <Label className="text-xs text-muted-foreground">
-          {t.pomodoro.taskLabel}
+          {
+            t.pomodoro
+              .taskLabel
+          }
         </Label>
 
         <Select
@@ -274,9 +308,9 @@ export function PomodoroTimer({
             selectedTaskId ??
             undefined
           }
-          onValueChange={(id) =>
-            selectTask(id)
-          }
+          onValueChange={(
+            id,
+          ) => selectTask(id)}
           disabled={
             status === "running"
           }
@@ -303,18 +337,25 @@ export function PomodoroTimer({
               activeTasks.map(
                 (task) => (
                   <SelectItem
-                    key={task.id}
-                    value={task.id}
+                    key={
+                      task.id
+                    }
+                    value={
+                      task.id
+                    }
                   >
-                    {task.title}
+                    {
+                      task.title
+                    }
                   </SelectItem>
-                )
+                ),
               )
             )}
           </SelectContent>
         </Select>
       </div>
 
+      {/* Phase selector */}
       <div className="grid grid-cols-2 gap-1 rounded-lg bg-secondary/40 p-1">
         <button
           type="button"
@@ -326,9 +367,10 @@ export function PomodoroTimer({
           }
           className={cn(
             "flex items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed",
+
             phase === "focus"
               ? "bg-focus/20 text-focus"
-              : "text-muted-foreground hover:text-foreground"
+              : "text-muted-foreground hover:text-foreground",
           )}
         >
           <Flame className="size-3.5" />
@@ -346,9 +388,10 @@ export function PomodoroTimer({
           }
           className={cn(
             "flex items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed",
+
             phase === "break"
               ? "bg-rest/20 text-rest"
-              : "text-muted-foreground hover:text-foreground"
+              : "text-muted-foreground hover:text-foreground",
           )}
         >
           <Coffee className="size-3.5" />
@@ -357,6 +400,7 @@ export function PomodoroTimer({
         </button>
       </div>
 
+      {/* Timer */}
       <div className="flex flex-col items-center py-2">
         <div className="relative flex size-44 items-center justify-center">
           <svg
@@ -379,7 +423,9 @@ export function PomodoroTimer({
               cy="88"
               r={RADIUS}
               fill="none"
-              stroke={phaseColor}
+              stroke={
+                phaseColor
+              }
               strokeWidth="8"
               strokeLinecap="round"
               strokeDasharray={
@@ -392,7 +438,7 @@ export function PomodoroTimer({
               className={cn(
                 status ===
                   "running" &&
-                  "transition-[stroke-dashoffset] duration-1000 ease-linear"
+                  "transition-[stroke-dashoffset] duration-1000 ease-linear",
               )}
             />
           </svg>
@@ -400,19 +446,21 @@ export function PomodoroTimer({
           <div className="absolute flex flex-col items-center">
             <span className="font-mono text-4xl font-semibold tabular-nums">
               {formatClock(
-                remainingSeconds
+                remainingSeconds,
               )}
             </span>
 
             <span
               className={cn(
                 "mt-1 text-[11px] font-medium",
+
                 phase === "focus"
                   ? "text-focus"
-                  : "text-rest"
+                  : "text-rest",
               )}
             >
-              {status === "running"
+              {status ===
+              "running"
                 ? phase ===
                   "focus"
                   ? t.pomodoro
@@ -421,17 +469,26 @@ export function PomodoroTimer({
                       .runningBreak
                 : status ===
                     "paused"
-                  ? t.pomodoro.paused
-                  : t.pomodoro.ready}
+                  ? t.pomodoro
+                      .paused
+                  : t.pomodoro
+                      .ready}
             </span>
           </div>
         </div>
 
+        {/* Selected task */}
         {selectedTask ? (
           <p className="mt-3 max-w-full truncate text-xs text-muted-foreground">
-            {t.pomodoro.taskPrefix}{" "}
+            {
+              t.pomodoro
+                .taskPrefix
+            }{" "}
+
             <span className="font-medium text-foreground">
-              {selectedTask.title}
+              {
+                selectedTask.title
+              }
             </span>
           </p>
         ) : (
@@ -443,124 +500,192 @@ export function PomodoroTimer({
           </p>
         )}
 
-        <div className="mt-4 flex items-center gap-2">
-          {status === "running" ? (
+        {/* Main controls */}
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          {status ===
+          "running" ? (
             <Button
-              onClick={pause}
               size="sm"
               variant="secondary"
+              onClick={pause}
             >
               <Pause className="size-3.5" />
 
-              {t.pomodoro.pause}
+              {
+                t.pomodoro
+                  .pause
+              }
             </Button>
           ) : (
             <Button
-              onClick={handleStart}
               size="sm"
-              disabled={!canStart}
+              onClick={
+                handleStart
+              }
+              disabled={
+                !canStart
+              }
             >
               <Play className="size-3.5" />
 
-              {status === "paused"
-                ? t.pomodoro.resume
-                : t.pomodoro.start}
+              {status ===
+              "paused"
+                ? t.pomodoro
+                    .resume
+                : t.pomodoro
+                    .start}
             </Button>
           )}
 
           <Button
-            onClick={handleStop}
             size="sm"
             variant="outline"
+            onClick={
+              handleStop
+            }
             disabled={
               status === "idle"
             }
           >
             <Square className="size-3.5" />
 
-            {t.pomodoro.stop}
+            {
+              t.pomodoro
+                .stop
+            }
+          </Button>
+
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={
+              onEnterFocusMode
+            }
+            disabled={
+              !selectedTask
+            }
+            title={
+              t.focusMode.enter
+            }
+          >
+            <Maximize2 className="size-3.5" />
+
+            {
+              t.focusMode.enter
+            }
           </Button>
         </div>
       </div>
 
       <Separator />
 
-      <div className="flex-1">
-        <div className="mb-3">
-          <p className="text-xs font-medium text-muted-foreground">
-            {t.pomodoro.todayLog}
-          </p>
-        </div>
+      {/* Today's Focus Log */}
+      <div>
+        <h3 className="text-xs font-semibold">
+          {
+            t.pomodoro
+              .todayLog
+          }
+        </h3>
 
-        {timelineSessions.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-border px-3 py-3">
+        {timelineSessions.length ===
+        0 ? (
+          <div className="mt-3 rounded-lg border border-dashed border-border bg-secondary/20 px-3 py-4 text-center">
             <p className="text-xs text-muted-foreground">
-              {t.pomodoro.noRecords}
+              {
+                t.pomodoro
+                  .noRecords
+              }
             </p>
 
-            <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground/70">
-              {t.pomodoro.noRecordsHint}
+            <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground/65">
+              {
+                t.pomodoro
+                  .noRecordsHint
+              }
             </p>
           </div>
         ) : (
-          <ol className="space-y-0">
-            {timelineSessions.map((session, index) => (
-              <li
-                key={session.id}
-                className="grid grid-cols-[60px_1fr] gap-3 text-xs"
-              >
-                <time
-                  dateTime={session.startedAt}
-                  className="pt-0.5 font-mono text-[10px] tabular-nums text-muted-foreground"
+          <ol className="mt-3 space-y-0">
+            {timelineSessions.map(
+              (
+                session,
+                index,
+              ) => (
+                <li
+                  key={
+                    session.id
+                  }
+                  className="relative grid grid-cols-[4.25rem_1fr] gap-3 pb-4 last:pb-0"
                 >
-                  {formatTime(session.startedAt, language)}
-                </time>
-
-                <div
-                  className={cn(
-                    "relative pb-4 pl-4",
-                    index !== timelineSessions.length - 1 &&
-                      "before:absolute before:left-[3px] before:top-3 before:h-[calc(100%-4px)] before:w-px before:bg-border",
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "absolute left-0 top-1 size-[7px] rounded-full ring-2 ring-background",
-                      session.phase === "focus" ? "bg-focus" : "bg-rest",
+                  <time className="pt-0.5 text-right font-mono text-[10px] tabular-nums text-muted-foreground/70">
+                    {formatTime(
+                      session.startedAt,
+                      language,
                     )}
-                  />
+                  </time>
 
-                  <div className="min-w-0">
+                  <div className="relative min-w-0 pl-4">
+                    {index <
+                      timelineSessions.length -
+                        1 && (
+                      <span className="absolute left-[3px] top-3 h-[calc(100%+0.25rem)] w-px bg-border" />
+                    )}
+
+                    <span
+                      className={cn(
+                        "absolute left-0 top-1.5 size-[7px] rounded-full",
+
+                        session.phase ===
+                          "focus"
+                          ? "bg-focus"
+                          : "bg-rest",
+                      )}
+                    />
+
                     <div className="flex items-start justify-between gap-2">
-                      <p className="min-w-0 truncate font-medium">
-                        {session.taskTitle}
+                      <p className="min-w-0 truncate text-xs font-medium">
+                        {
+                          session.taskTitle
+                        }
                       </p>
 
                       <span
                         className={cn(
                           "shrink-0 font-mono text-[11px] tabular-nums",
-                          session.phase === "focus"
+
+                          session.phase ===
+                            "focus"
                             ? "text-focus"
                             : "text-rest",
                         )}
                       >
-                        {Math.round(session.elapsedSeconds / 60)}{" "}
-                        {language === "zh" ? "分" : "min"}
+                        {Math.round(
+                          session.elapsedSeconds /
+                            60,
+                        )}{" "}
+                        {language ===
+                        "zh"
+                          ? "分"
+                          : "min"}
                       </span>
                     </div>
 
                     <p className="mt-0.5 text-[11px] text-muted-foreground">
-                      {session.phase === "focus"
-                        ? t.pomodoro.focus
-                        : t.pomodoro.break}
+                      {session.phase ===
+                      "focus"
+                        ? t.pomodoro
+                            .focus
+                        : t.pomodoro
+                            .break}
 
                       {!session.completedFully &&
                         ` · ${t.pomodoro.endedEarly}`}
                     </p>
                   </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              ),
+            )}
           </ol>
         )}
       </div>

@@ -1,41 +1,87 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-import { genId, taskStorage } from "@/lib/storage";
+import {
+  genId,
+  taskStorage,
+} from "@/lib/storage";
 
-import type { Task, TaskFilter, TaskFormValues } from "@/types/task";
+import type {
+  Task,
+  TaskFilter,
+  TaskFormValues,
+} from "@/types/task";
 
-function getLocalDateKey(date = new Date()) {
-  const year = date.getFullYear();
+function getLocalDateKey(
+  date = new Date(),
+) {
+  const year =
+    date.getFullYear();
 
-  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const month = String(
+    date.getMonth() + 1,
+  ).padStart(2, "0");
 
-  const day = String(date.getDate()).padStart(2, "0");
+  const day = String(
+    date.getDate(),
+  ).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
 }
 
-function normalizeTask(task: Task): Task {
+function normalizeTask(
+  task: Task,
+): Task {
   return {
     ...task,
 
-    plannedDate: typeof task.plannedDate === "string" ? task.plannedDate : "",
+    plannedDate:
+      typeof task.plannedDate ===
+      "string"
+        ? task.plannedDate
+        : "",
 
     completedAt:
-      typeof task.completedAt === "string" ? task.completedAt : null,
+      typeof task.completedAt ===
+      "string"
+        ? task.completedAt
+        : null,
+
+    priority:
+      task.priority === "high" ||
+      task.priority === "low" ||
+      task.priority === "medium"
+        ? task.priority
+        : "medium",
   };
 }
 
 export function useTasks() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [
+    tasks,
+    setTasks,
+  ] = useState<Task[]>([]);
 
-  const [hydrated, setHydrated] = useState(false);
+  const [
+    hydrated,
+    setHydrated,
+  ] = useState(false);
 
   useEffect(() => {
-    const storedTasks = taskStorage.load();
+    const storedTasks =
+      taskStorage.load();
 
-    setTasks(storedTasks.map(normalizeTask));
+    setTasks(
+      storedTasks.map(
+        normalizeTask,
+      ),
+    );
 
     setHydrated(true);
   }, []);
@@ -46,149 +92,259 @@ export function useTasks() {
     }
 
     taskStorage.save(tasks);
-  }, [tasks, hydrated]);
+  }, [
+    tasks,
+    hydrated,
+  ]);
 
-  const addTask = useCallback(
-    (
-      values: TaskFormValues,
-      options?: {
-        addToToday?: boolean;
-      },
-    ) => {
-      const task: Task = {
-        id: genId("task"),
+  const addTask =
+    useCallback(
+      (
+        values: TaskFormValues,
+        options?: {
+          addToToday?: boolean;
+        },
+      ) => {
+        const task: Task = {
+          id: genId("task"),
 
-        ...values,
+          ...values,
 
-        completed: false,
+          /**
+           * Priority remains in the data model
+           * for backward compatibility, but is
+           * no longer a required user decision.
+           */
+          priority: "medium",
 
-        completedAt: null,
+          completed: false,
 
-        createdAt: new Date().toISOString(),
+          completedAt: null,
 
-        plannedDate: options?.addToToday ? getLocalDateKey() : "",
-      };
+          createdAt:
+            new Date().toISOString(),
 
-      setTasks((prev) => [task, ...prev]);
-
-      return task;
-    },
-    [],
-  );
-
-  const updateTask = useCallback((id: string, values: TaskFormValues) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id
-          ? {
-              ...task,
-              ...values,
-            }
-          : task,
-      ),
-    );
-  }, []);
-
-  const deleteTask = useCallback((id: string) => {
-    setTasks((prev) => prev.filter((task) => task.id !== id));
-  }, []);
-
-  const toggleComplete = useCallback((id: string) => {
-    setTasks((prev) =>
-      prev.map((task) => {
-        if (task.id !== id) {
-          return task;
-        }
-
-        const nextCompleted = !task.completed;
-
-        return {
-          ...task,
-          completed: nextCompleted,
-          completedAt: nextCompleted ? new Date().toISOString() : null,
+          plannedDate:
+            options?.addToToday
+              ? getLocalDateKey()
+              : "",
         };
-      }),
+
+        setTasks((prev) => [
+          task,
+          ...prev,
+        ]);
+
+        return task;
+      },
+      [],
     );
-  }, []);
 
-  const toggleToday = useCallback((id: string) => {
-    const today = getLocalDateKey();
+  const updateTask =
+    useCallback(
+      (
+        id: string,
+        values: TaskFormValues,
+      ) => {
+        setTasks((prev) =>
+          prev.map(
+            (task) =>
+              task.id === id
+                ? {
+                    ...task,
 
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id
-          ? {
+                    /**
+                     * Only form-editable fields
+                     * are updated here.
+                     *
+                     * Existing priority remains
+                     * untouched.
+                     */
+                    ...values,
+                  }
+                : task,
+          ),
+        );
+      },
+      [],
+    );
+
+  const deleteTask =
+    useCallback(
+      (id: string) => {
+        setTasks((prev) =>
+          prev.filter(
+            (task) =>
+              task.id !== id,
+          ),
+        );
+      },
+      [],
+    );
+
+  const toggleComplete =
+    useCallback(
+      (id: string) => {
+        setTasks((prev) =>
+          prev.map((task) => {
+            if (
+              task.id !== id
+            ) {
+              return task;
+            }
+
+            const nextCompleted =
+              !task.completed;
+
+            return {
               ...task,
 
-              plannedDate: task.plannedDate === today ? "" : today,
-            }
-          : task,
-      ),
-    );
-  }, []);
+              completed:
+                nextCompleted,
 
-  const getTask = useCallback(
-    (id: string | null) =>
-      id ? (tasks.find((task) => task.id === id) ?? null) : null,
-    [tasks],
-  );
-
-  const counts = useMemo(() => {
-    const today = getLocalDateKey();
-
-    return {
-      today: tasks.filter(
-        (task) => task.plannedDate === today && !task.completed,
-      ).length,
-
-      all: tasks.length,
-
-      active: tasks.filter((task) => !task.completed).length,
-
-      completed: tasks.filter((task) => task.completed).length,
-    };
-  }, [tasks]);
-
-  const filterTasks = useCallback(
-    (filter: TaskFilter) => {
-      const today = getLocalDateKey();
-
-      const sorted = [...tasks].sort((a, b) => {
-        if (a.completed !== b.completed) {
-          return a.completed ? 1 : -1;
-        }
-
-        const rank = {
-          high: 0,
-          medium: 1,
-          low: 2,
-        } as const;
-
-        if (rank[a.priority] !== rank[b.priority]) {
-          return rank[a.priority] - rank[b.priority];
-        }
-
-        return b.createdAt.localeCompare(a.createdAt);
-      });
-
-      if (filter === "today") {
-        return sorted.filter(
-          (task) => task.plannedDate === today && !task.completed,
+              completedAt:
+                nextCompleted
+                  ? new Date().toISOString()
+                  : null,
+            };
+          }),
         );
-      }
+      },
+      [],
+    );
 
-      if (filter === "active") {
-        return sorted.filter((task) => !task.completed);
-      }
+  const toggleToday =
+    useCallback(
+      (id: string) => {
+        const today =
+          getLocalDateKey();
 
-      if (filter === "completed") {
-        return sorted.filter((task) => task.completed);
-      }
+        setTasks((prev) =>
+          prev.map(
+            (task) =>
+              task.id === id
+                ? {
+                    ...task,
 
-      return sorted;
-    },
-    [tasks],
-  );
+                    plannedDate:
+                      task.plannedDate ===
+                      today
+                        ? ""
+                        : today,
+                  }
+                : task,
+          ),
+        );
+      },
+      [],
+    );
+
+  const getTask =
+    useCallback(
+      (id: string | null) =>
+        id
+          ? tasks.find(
+              (task) =>
+                task.id === id,
+            ) ?? null
+          : null,
+      [tasks],
+    );
+
+  const counts =
+    useMemo(() => {
+      const today =
+        getLocalDateKey();
+
+      return {
+        today: tasks.filter(
+          (task) =>
+            task.plannedDate ===
+              today &&
+            !task.completed,
+        ).length,
+
+        all: tasks.length,
+
+        active:
+          tasks.filter(
+            (task) =>
+              !task.completed,
+          ).length,
+
+        completed:
+          tasks.filter(
+            (task) =>
+              task.completed,
+          ).length,
+      };
+    }, [tasks]);
+
+  const filterTasks =
+    useCallback(
+      (
+        filter: TaskFilter,
+      ) => {
+        const today =
+          getLocalDateKey();
+
+        /**
+         * Keep sorting simple:
+         * active work first, then newest first.
+         *
+         * Priority no longer influences task order.
+         */
+        const sorted = [
+          ...tasks,
+        ].sort((a, b) => {
+          if (
+            a.completed !==
+            b.completed
+          ) {
+            return a.completed
+              ? 1
+              : -1;
+          }
+
+          return b.createdAt.localeCompare(
+            a.createdAt,
+          );
+        });
+
+        if (
+          filter === "today"
+        ) {
+          return sorted.filter(
+            (task) =>
+              task.plannedDate ===
+                today &&
+              !task.completed,
+          );
+        }
+
+        if (
+          filter === "active"
+        ) {
+          return sorted.filter(
+            (task) =>
+              !task.completed,
+          );
+        }
+
+        if (
+          filter ===
+          "completed"
+        ) {
+          return sorted.filter(
+            (task) =>
+              task.completed,
+          );
+        }
+
+        return sorted;
+      },
+      [tasks],
+    );
 
   return {
     tasks,

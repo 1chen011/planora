@@ -7,8 +7,20 @@ export type Task = {
 
   note: string;
 
+  /**
+   * Local calendar date in YYYY-MM-DD format.
+   *
+   * This value should be treated as a date-only value,
+   * not as a UTC timestamp.
+   */
   deadline: string;
 
+  /**
+   * Kept for backward compatibility with existing task data.
+   *
+   * Priority is no longer part of the primary task creation UX.
+   * New tasks currently default to "medium".
+   */
   priority: Priority;
 
   completed: boolean;
@@ -27,10 +39,7 @@ export type Task = {
   plannedDate: string;
 };
 
-export type TaskFormValues = Pick<
-  Task,
-  "title" | "note" | "deadline" | "priority"
->;
+export type TaskFormValues = Pick<Task, "title" | "note" | "deadline">;
 
 export type TaskFilter = "today" | "all" | "active" | "completed";
 
