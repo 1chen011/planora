@@ -28,14 +28,26 @@ export const translations = {
       language: "Language",
       english: "English",
       chinese: "中文",
+
+      localData: "Local data",
+
+      exportData: "Export data",
+
+      importData: "Import data",
+
+      resetData: "Reset data",
+
+      importConfirm:
+        "Importing this backup will replace your current tasks, focus sessions, and Pomodoro settings. Continue?",
+
+      resetConfirm:
+        "Resetting local data will permanently remove your tasks, focus sessions, and Pomodoro settings from this browser. Export a backup first if you want to keep them. Continue?",
     },
 
     home: {
       greeting: {
         morning: "Good morning",
-
         afternoon: "Good afternoon",
-
         evening: "Good evening",
       },
 
@@ -104,9 +116,11 @@ export const translations = {
         today:
           "Nothing planned for today yet. Choose what you want to move forward.",
 
-        all: "No tasks yet. Add something you want to move forward.",
+        all:
+          "No tasks yet. Add something you want to move forward.",
 
-        active: "Nothing pending. Take a break or decide what comes next.",
+        active:
+          "Nothing pending. Take a break or decide what comes next.",
 
         completed:
           "No completed tasks yet. Your finished work will appear here.",
@@ -156,7 +170,8 @@ export const translations = {
       createDescription:
         "Capture the work first. You can organize the details later.",
 
-      editDescription: "Update the task details. Changes are saved locally.",
+      editDescription:
+        "Update the task details. Changes are saved locally.",
 
       title: "Task title",
 
@@ -223,19 +238,25 @@ export const translations = {
 
       noRecords: "No focus sessions yet today.",
 
-      noRecordsHint: "Complete a focus session to build your daily log.",
+      noRecordsHint:
+        "Complete a focus session to build your daily log.",
 
       endedEarly: "Stopped early",
 
-      chooseTaskWarning: "Choose a task before starting.",
+      chooseTaskWarning:
+        "Choose a task before starting.",
 
-      stoppedMessage: "Focus time recorded.",
+      stoppedMessage:
+        "Focus time recorded.",
 
-      focusFinished: "Focus session complete. Time for a short break.",
+      focusFinished:
+        "Focus session complete. Time for a short break.",
 
-      breakFinished: "Break complete. Ready for the next focus session.",
+      breakFinished:
+        "Break complete. Ready for the next focus session.",
 
-      focusRecorded: "Your focus time was added to this task.",
+      focusRecorded:
+        "Your focus time was added to this task.",
 
       deletedTask: "Deleted task",
     },
@@ -252,7 +273,8 @@ export const translations = {
 
       currentTask: "Current task",
 
-      noTask: "Choose a task to focus on",
+      noTask:
+        "Choose a task to focus on",
 
       focusPhase: "Focus",
 
@@ -268,7 +290,8 @@ export const translations = {
 
       returnToFocus: "Return",
 
-      unsupported: "Mini Focus isn't supported in this browser yet.",
+      unsupported:
+        "Mini Focus isn't supported in this browser yet.",
 
       openFailed:
         "Mini Focus couldn't open. Try again from the Focus Mode button.",
@@ -298,7 +321,26 @@ export const translations = {
 
       addedToToday: "Added to Today",
 
-      removedFromToday: "Removed from Today",
+      removedFromToday:
+        "Removed from Today",
+
+      dataExported:
+        "Planora data exported",
+
+      dataExportFailed:
+        "Could not export Planora data",
+
+      dataImported:
+        "Planora data imported",
+
+      dataImportFailed:
+        "Could not import this Planora backup",
+
+      dataReset:
+        "Planora local data reset",
+
+      dataResetFailed:
+        "Could not reset Planora local data",
     },
   },
 
@@ -336,14 +378,26 @@ export const translations = {
       english: "English",
 
       chinese: "中文",
+
+      localData: "本地数据",
+
+      exportData: "导出数据",
+
+      importData: "导入数据",
+
+      resetData: "重置数据",
+
+      importConfirm:
+        "导入备份会替换当前的任务、专注记录和番茄钟设置。确定继续吗？",
+
+      resetConfirm:
+        "重置本地数据会永久删除这个浏览器中的任务、专注记录和番茄钟设置。如果你想保留这些数据，请先导出备份。确定继续吗？",
     },
 
     home: {
       greeting: {
         morning: "早上好",
-
         afternoon: "下午好",
-
         evening: "晚上好",
       },
 
@@ -359,7 +413,8 @@ export const translations = {
 
       currentFocusEmpty: "还没有选择专注任务。",
 
-      currentFocusEmptyHint: "选择一件你真正想推进的事情。",
+      currentFocusEmptyHint:
+        "选择一件你真正想推进的事情。",
 
       continueFocus: "继续专注",
 
@@ -395,30 +450,33 @@ export const translations = {
     taskList: {
       titles: {
         today: "今天",
-
         all: "全部任务",
-
         active: "待完成",
-
         completed: "已完成",
       },
 
-      todaySubtitle: "件今天想推进的事情",
+      todaySubtitle:
+        "件今天想推进的事情",
 
-      activeSubtitle: "件待处理任务",
+      activeSubtitle:
+        "件待处理任务",
 
       recordSubtitle: "项任务",
 
       addTask: "新增任务",
 
       empty: {
-        today: "今天还没有安排任务。选择几件你真正想推进的事情吧。",
+        today:
+          "今天还没有安排任务。选择几件你真正想推进的事情吧。",
 
-        all: "还没有任务。先记下你想推进的事情。",
+        all:
+          "还没有任务。先记下你想推进的事情。",
 
-        active: "没有待完成任务。休息一下，或者想想下一步。",
+        active:
+          "没有待完成任务。休息一下，或者想想下一步。",
 
-        completed: "还没有已完成任务。完成的工作会出现在这里。",
+        completed:
+          "还没有已完成任务。完成的工作会出现在这里。",
       },
     },
 
@@ -445,19 +503,14 @@ export const translations = {
 
       priority: {
         high: "高",
-
         medium: "中",
-
         low: "低",
       },
 
       time: {
         minute: "分钟",
-
         minutes: "分钟",
-
         hour: "小时",
-
         hours: "小时",
       },
     },
@@ -467,19 +520,24 @@ export const translations = {
 
       editTask: "编辑任务",
 
-      createDescription: "先把事情记下来，不需要现在就把所有细节规划完整。",
+      createDescription:
+        "先把事情记下来，不需要现在就把所有细节规划完整。",
 
-      editDescription: "更新任务信息，修改会保存到本地。",
+      editDescription:
+        "更新任务信息，修改会保存到本地。",
 
       title: "任务标题",
 
-      titlePlaceholder: "例如：更新 Planora 多语言",
+      titlePlaceholder:
+        "例如：更新 Planora 多语言",
 
-      titleRequired: "请输入任务标题",
+      titleRequired:
+        "请输入任务标题",
 
       note: "备注",
 
-      notePlaceholder: "上下文、下一步、链接或验收标准（可选）",
+      notePlaceholder:
+        "上下文、下一步、链接或验收标准（可选）",
 
       deadline: "截止日期",
 
@@ -497,31 +555,39 @@ export const translations = {
 
       settings: "计时设置",
 
-      focusMinutes: "专注时长（分钟）",
+      focusMinutes:
+        "专注时长（分钟）",
 
-      breakMinutes: "休息时长（分钟）",
+      breakMinutes:
+        "休息时长（分钟）",
 
       taskLabel: "专注任务",
 
-      chooseTask: "选择一条待完成任务",
+      chooseTask:
+        "选择一条待完成任务",
 
-      noTasks: "暂无待完成任务",
+      noTasks:
+        "暂无待完成任务",
 
       focus: "专注",
 
       break: "休息",
 
-      runningFocus: "专注进行中",
+      runningFocus:
+        "专注进行中",
 
-      runningBreak: "休息进行中",
+      runningBreak:
+        "休息进行中",
 
       paused: "已暂停",
 
       ready: "准备开始",
 
-      taskPrefix: "正在进行：",
+      taskPrefix:
+        "正在进行：",
 
-      chooseFirst: "选择一条任务开始",
+      chooseFirst:
+        "选择一条任务开始",
 
       pause: "暂停",
 
@@ -531,25 +597,35 @@ export const translations = {
 
       stop: "停止",
 
-      todayLog: "今日专注记录",
+      todayLog:
+        "今日专注记录",
 
-      noRecords: "今天还没有专注记录。",
+      noRecords:
+        "今天还没有专注记录。",
 
-      noRecordsHint: "完成一次专注后，你今天的投入会记录在这里。",
+      noRecordsHint:
+        "完成一次专注后，你今天的投入会记录在这里。",
 
-      endedEarly: "提前结束",
+      endedEarly:
+        "提前结束",
 
-      chooseTaskWarning: "请先选择一条任务。",
+      chooseTaskWarning:
+        "请先选择一条任务。",
 
-      stoppedMessage: "本次专注时间已记录。",
+      stoppedMessage:
+        "本次专注时间已记录。",
 
-      focusFinished: "专注时段结束，休息一下吧。",
+      focusFinished:
+        "专注时段结束，休息一下吧。",
 
-      breakFinished: "休息结束，可以开始下一段专注了。",
+      breakFinished:
+        "休息结束，可以开始下一段专注了。",
 
-      focusRecorded: "本次投入已记录到任务。",
+      focusRecorded:
+        "本次投入已记录到任务。",
 
-      deletedTask: "已删除的任务",
+      deletedTask:
+        "已删除的任务",
     },
 
     focusMode: {
@@ -559,17 +635,21 @@ export const translations = {
 
       exit: "退出专注模式",
 
-      exitHint: "退出只会返回工作空间；除非你暂停或停止，计时会继续进行。",
+      exitHint:
+        "退出只会返回工作空间；除非你暂停或停止，计时会继续进行。",
 
-      currentTask: "当前任务",
+      currentTask:
+        "当前任务",
 
-      noTask: "请选择一项任务开始专注",
+      noTask:
+        "请选择一项任务开始专注",
 
       focusPhase: "专注",
 
       breakPhase: "休息",
 
-      stopSession: "结束本次专注",
+      stopSession:
+        "结束本次专注",
     },
 
     miniFocus: {
@@ -579,9 +659,11 @@ export const translations = {
 
       returnToFocus: "返回",
 
-      unsupported: "当前浏览器暂不支持迷你专注模式。",
+      unsupported:
+        "当前浏览器暂不支持迷你专注模式。",
 
-      openFailed: "无法打开迷你专注，请从专注模式中重新尝试。",
+      openFailed:
+        "无法打开迷你专注，请从专注模式中重新尝试。",
     },
 
     progress: {
@@ -606,11 +688,32 @@ export const translations = {
 
       deleted: "任务已删除",
 
-      addedToToday: "已加入今天",
+      addedToToday:
+        "已加入今天",
 
-      removedFromToday: "已移出今天",
+      removedFromToday:
+        "已移出今天",
+
+      dataExported:
+        "Planora 数据已导出",
+
+      dataExportFailed:
+        "无法导出 Planora 数据",
+
+      dataImported:
+        "Planora 数据已导入",
+
+      dataImportFailed:
+        "无法导入这个 Planora 备份",
+
+      dataReset:
+        "Planora 本地数据已重置",
+
+      dataResetFailed:
+        "无法重置 Planora 本地数据",
     },
   },
 } as const;
 
-export type Translation = (typeof translations)[Language];
+export type Translation =
+  (typeof translations)[Language];
