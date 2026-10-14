@@ -28,6 +28,9 @@ export const translations = {
       language: "Language",
       english: "English",
       chinese: "中文",
+
+      localData: "Local data",
+      exportData: "Export data",
     },
 
     home: {
@@ -299,6 +302,10 @@ export const translations = {
       addedToToday: "Added to Today",
 
       removedFromToday: "Removed from Today",
+
+      dataExported: "Planora data exported",
+
+      dataExportFailed: "Could not export Planora data",
     },
   },
 
@@ -336,6 +343,10 @@ export const translations = {
       english: "English",
 
       chinese: "中文",
+
+      localData: "本地数据",
+
+      exportData: "导出数据",
     },
 
     home: {
@@ -609,6 +620,10 @@ export const translations = {
       addedToToday: "已加入今天",
 
       removedFromToday: "已移出今天",
+
+      dataExported: "Planora 数据已导出",
+
+      dataExportFailed: "无法导出 Planora 数据",
     },
   },
 } as const;

@@ -16,8 +16,11 @@ import {
 
 import { useTheme } from "next-themes";
 
-import { cn } from "@/lib/utils";
+import { DataControls } from "@/components/data-controls";
+
 import { useLanguage } from "@/i18n/language-context";
+
+import { cn } from "@/lib/utils";
 
 import type { Language } from "@/i18n/translation";
 import type { AppView, TaskFilter } from "@/types/task";
@@ -70,15 +73,20 @@ export function AppSidebar({
     completed: t.sidebar.completed,
   };
 
-  function handleLanguageChange(event: React.ChangeEvent<HTMLSelectElement>) {
+  function handleLanguageChange(
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) {
     setLanguage(event.target.value as Language);
   }
 
-  function handleThemeChange(event: React.ChangeEvent<HTMLSelectElement>) {
+  function handleThemeChange(
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) {
     setTheme(event.target.value);
   }
 
   const homeActive = view === "home";
+
   const todayActive = view === "today";
 
   const currentTheme = mounted ? (theme ?? "dark") : "dark";
@@ -92,7 +100,9 @@ export function AppSidebar({
         </div>
 
         <div className="min-w-0">
-          <p className="text-sm font-semibold leading-tight">{t.app.name}</p>
+          <p className="text-sm font-semibold leading-tight">
+            {t.app.name}
+          </p>
 
           <p className="truncate text-[11px] leading-tight text-muted-foreground">
             {t.app.subtitle}
@@ -114,6 +124,7 @@ export function AppSidebar({
         >
           <span className="flex items-center gap-2">
             <Home className="size-4" />
+
             {t.sidebar.home}
           </span>
         </button>
@@ -130,13 +141,16 @@ export function AppSidebar({
         >
           <span className="flex items-center gap-2">
             <CalendarDays className="size-4" />
+
             {t.sidebar.today}
           </span>
 
           <span
             className={cn(
               "rounded-full px-1.5 text-xs tabular-nums",
-              todayActive ? "text-primary" : "text-muted-foreground",
+              todayActive
+                ? "text-primary"
+                : "text-muted-foreground",
             )}
           >
             {counts.today}
@@ -168,13 +182,16 @@ export function AppSidebar({
               >
                 <span className="flex items-center gap-2">
                   <Icon className="size-4" />
+
                   {taskLabels[key]}
                 </span>
 
                 <span
                   className={cn(
                     "rounded-full px-1.5 text-xs tabular-nums",
-                    active ? "text-primary" : "text-muted-foreground",
+                    active
+                      ? "text-primary"
+                      : "text-muted-foreground",
                   )}
                 >
                   {counts[key]}
@@ -187,6 +204,7 @@ export function AppSidebar({
 
       {/* Bottom controls */}
       <div className="mt-auto space-y-3">
+        {/* Today's Focus */}
         <div className="rounded-lg border border-border bg-secondary/40 p-3">
           <p className="text-[11px] text-muted-foreground">
             {t.sidebar.todayFocus}
@@ -201,6 +219,7 @@ export function AppSidebar({
           </p>
         </div>
 
+        {/* Appearance */}
         <div className="space-y-1.5">
           <div className="flex items-center gap-1.5 px-1 text-[11px] text-muted-foreground">
             {currentTheme === "light" ? (
@@ -209,7 +228,9 @@ export function AppSidebar({
               <Moon className="size-3.5" />
             )}
 
-            <span>{t.sidebar.appearance}</span>
+            <span>
+              {t.sidebar.appearance}
+            </span>
           </div>
 
           <select
@@ -218,15 +239,24 @@ export function AppSidebar({
             disabled={!mounted}
             className="h-9 w-full rounded-md border border-border bg-background px-2.5 text-xs text-foreground outline-none transition-colors hover:bg-accent focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <option value="dark">{t.sidebar.dark}</option>
-            <option value="light">{t.sidebar.light}</option>
+            <option value="dark">
+              {t.sidebar.dark}
+            </option>
+
+            <option value="light">
+              {t.sidebar.light}
+            </option>
           </select>
         </div>
 
+        {/* Language */}
         <div className="space-y-1.5">
           <div className="flex items-center gap-1.5 px-1 text-[11px] text-muted-foreground">
             <Languages className="size-3.5" />
-            <span>{t.sidebar.language}</span>
+
+            <span>
+              {t.sidebar.language}
+            </span>
           </div>
 
           <select
@@ -234,10 +264,18 @@ export function AppSidebar({
             onChange={handleLanguageChange}
             className="h-9 w-full rounded-md border border-border bg-background px-2.5 text-xs text-foreground outline-none transition-colors hover:bg-accent focus:ring-2 focus:ring-ring"
           >
-            <option value="en">{t.sidebar.english}</option>
-            <option value="zh">{t.sidebar.chinese}</option>
+            <option value="en">
+              {t.sidebar.english}
+            </option>
+
+            <option value="zh">
+              {t.sidebar.chinese}
+            </option>
           </select>
         </div>
+
+        {/* Local data */}
+        <DataControls />
       </div>
     </aside>
   );
