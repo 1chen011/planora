@@ -4,6 +4,7 @@ import { useRef } from "react";
 
 import {
   Download,
+  Trash2,
   Upload,
 } from "lucide-react";
 
@@ -163,6 +164,38 @@ export function DataControls() {
     }
   }
 
+  function handleReset() {
+    const confirmed =
+      window.confirm(
+        t.sidebar.resetConfirm,
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      planoraDataStorage.resetData();
+
+      toast.success(
+        t.toast.dataReset,
+      );
+
+      window.setTimeout(() => {
+        window.location.reload();
+      }, 700);
+    } catch (error) {
+      console.error(
+        "Planora: failed to reset local data",
+        error,
+      );
+
+      toast.error(
+        t.toast.dataResetFailed,
+      );
+    }
+  }
+
   return (
     <div className="space-y-1.5">
       <div className="flex items-center gap-1.5 px-1 text-[11px] text-muted-foreground">
@@ -174,6 +207,7 @@ export function DataControls() {
       </div>
 
       <div className="grid gap-1.5">
+        {/* Export */}
         <Button
           type="button"
           variant="outline"
@@ -187,6 +221,7 @@ export function DataControls() {
           {t.sidebar.exportData}
         </Button>
 
+        {/* Import */}
         <Button
           type="button"
           variant="outline"
@@ -198,6 +233,20 @@ export function DataControls() {
           <Upload className="size-3.5" />
 
           {t.sidebar.importData}
+        </Button>
+
+        {/* Reset */}
+        <Button
+          type="button"
+          variant="outline"
+          onClick={
+            handleReset
+          }
+          className="h-9 w-full justify-start px-2.5 text-xs font-normal text-destructive hover:bg-destructive/10 hover:text-destructive"
+        >
+          <Trash2 className="size-3.5" />
+
+          {t.sidebar.resetData}
         </Button>
       </div>
 
