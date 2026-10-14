@@ -31,14 +31,16 @@ export const translations = {
 
       localData: "Local data",
       exportData: "Export data",
+      importData: "Import data",
+
+      importConfirm:
+        "Importing this backup will replace your current tasks, focus sessions, and Pomodoro settings. Continue?",
     },
 
     home: {
       greeting: {
         morning: "Good morning",
-
         afternoon: "Good afternoon",
-
         evening: "Good evening",
       },
 
@@ -306,6 +308,10 @@ export const translations = {
       dataExported: "Planora data exported",
 
       dataExportFailed: "Could not export Planora data",
+
+      dataImported: "Planora data imported",
+
+      dataImportFailed: "Could not import this Planora backup",
     },
   },
 
@@ -347,14 +353,17 @@ export const translations = {
       localData: "本地数据",
 
       exportData: "导出数据",
+
+      importData: "导入数据",
+
+      importConfirm:
+        "导入备份会替换当前的任务、专注记录和番茄钟设置。确定继续吗？",
     },
 
     home: {
       greeting: {
         morning: "早上好",
-
         afternoon: "下午好",
-
         evening: "晚上好",
       },
 
@@ -406,11 +415,8 @@ export const translations = {
     taskList: {
       titles: {
         today: "今天",
-
         all: "全部任务",
-
         active: "待完成",
-
         completed: "已完成",
       },
 
@@ -624,6 +630,10 @@ export const translations = {
       dataExported: "Planora 数据已导出",
 
       dataExportFailed: "无法导出 Planora 数据",
+
+      dataImported: "Planora 数据已导入",
+
+      dataImportFailed: "无法导入这个 Planora 备份",
     },
   },
 } as const;

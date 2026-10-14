@@ -1,6 +1,12 @@
 "use client";
 
-import { Download } from "lucide-react";
+import { useRef } from "react";
+
+import {
+  Download,
+  Upload,
+} from "lucide-react";
+
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -29,6 +35,11 @@ function getLocalDateKey(
 export function DataControls() {
   const { t } =
     useLanguage();
+
+  const fileInputRef =
+    useRef<HTMLInputElement>(
+      null,
+    );
 
   function handleExport() {
     try {
@@ -85,6 +96,73 @@ export function DataControls() {
     }
   }
 
+  function handleImportClick() {
+    fileInputRef.current?.click();
+  }
+
+  async function handleImportFile(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    const file =
+      event.target.files?.[0];
+
+    // Allow selecting the same file again later.
+    event.target.value = "";
+
+    if (!file) {
+      return;
+    }
+
+    const confirmed =
+      window.confirm(
+        t.sidebar.importConfirm,
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const rawData =
+        await file.text();
+
+      const result =
+        planoraDataStorage.importData(
+          rawData,
+        );
+
+      if (!result.success) {
+        console.error(
+          "Planora: import rejected",
+          result.error,
+        );
+
+        toast.error(
+          t.toast.dataImportFailed,
+        );
+
+        return;
+      }
+
+      toast.success(
+        t.toast.dataImported,
+      );
+
+      window.setTimeout(() => {
+        window.location.reload();
+      }, 700);
+    } catch (error) {
+      console.error(
+        "Planora: failed to import data",
+        error,
+      );
+
+      toast.error(
+        t.toast.dataImportFailed,
+      );
+    }
+  }
+
   return (
     <div className="space-y-1.5">
       <div className="flex items-center gap-1.5 px-1 text-[11px] text-muted-foreground">
@@ -95,18 +173,43 @@ export function DataControls() {
         </span>
       </div>
 
-      <Button
-        type="button"
-        variant="outline"
-        onClick={
-          handleExport
-        }
-        className="h-9 w-full justify-start px-2.5 text-xs font-normal"
-      >
-        <Download className="size-3.5" />
+      <div className="grid gap-1.5">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={
+            handleExport
+          }
+          className="h-9 w-full justify-start px-2.5 text-xs font-normal"
+        >
+          <Download className="size-3.5" />
 
-        {t.sidebar.exportData}
-      </Button>
+          {t.sidebar.exportData}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          onClick={
+            handleImportClick
+          }
+          className="h-9 w-full justify-start px-2.5 text-xs font-normal"
+        >
+          <Upload className="size-3.5" />
+
+          {t.sidebar.importData}
+        </Button>
+      </div>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".json,application/json"
+        onChange={
+          handleImportFile
+        }
+        className="hidden"
+      />
     </div>
   );
 }
