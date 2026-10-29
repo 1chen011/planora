@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import {
   login,
   signup,
@@ -7,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import { createClient } from "@/lib/supabase/server";
+
 export default async function LoginPage({
   searchParams,
 }: {
@@ -15,6 +19,22 @@ export default async function LoginPage({
     message?: string;
   }>;
 }) {
+  /*
+   * If the user already has a valid session,
+   * there is no reason to show the login page.
+   */
+  const supabase =
+    await createClient();
+
+  const {
+    data: claimsData,
+  } =
+    await supabase.auth.getClaims();
+
+  if (claimsData?.claims) {
+    redirect("/");
+  }
+
   const params =
     await searchParams;
 

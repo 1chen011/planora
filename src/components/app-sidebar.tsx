@@ -9,6 +9,7 @@ import {
   Home,
   Languages,
   ListTodo,
+  LogOut,
   Moon,
   Sun,
   TimerIcon,
@@ -67,7 +68,10 @@ export function AppSidebar({
     setMounted(true);
   }, []);
 
-  const taskLabels: Record<Exclude<TaskFilter, "today">, string> = {
+  const taskLabels: Record<
+    Exclude<TaskFilter, "today">,
+    string
+  > = {
     all: t.sidebar.allTasks,
     active: t.sidebar.active,
     completed: t.sidebar.completed,
@@ -89,7 +93,9 @@ export function AppSidebar({
 
   const todayActive = view === "today";
 
-  const currentTheme = mounted ? (theme ?? "dark") : "dark";
+  const currentTheme = mounted
+    ? (theme ?? "dark")
+    : "dark";
 
   return (
     <aside className="flex h-full w-56 shrink-0 flex-col border-r border-border bg-card/40 px-3 py-4">
@@ -276,6 +282,21 @@ export function AppSidebar({
 
         {/* Local data */}
         <DataControls />
+
+        {/* Logout */}
+        <form
+          action="/auth/signout"
+          method="post"
+        >
+          <button
+            type="submit"
+            className="flex h-9 w-full items-center gap-2 rounded-md px-2.5 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          >
+            <LogOut className="size-3.5" />
+
+            Log out
+          </button>
+        </form>
       </div>
     </aside>
   );
