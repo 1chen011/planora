@@ -1,8 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import {
+  useRef,
+} from "react";
 
 import {
+  ChevronRight,
+  DatabaseBackup,
   Download,
   Trash2,
   Upload,
@@ -10,11 +14,26 @@ import {
 
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import {
+  Button,
+} from "@/components/ui/button";
 
-import { useLanguage } from "@/i18n/language-context";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
-import { planoraDataStorage } from "@/lib/storage";
+import {
+  useLanguage,
+} from "@/i18n/language-context";
+
+import {
+  planoraDataStorage,
+} from "@/lib/storage";
 
 function getLocalDateKey(
   date = new Date(),
@@ -24,18 +43,25 @@ function getLocalDateKey(
 
   const month = String(
     date.getMonth() + 1,
-  ).padStart(2, "0");
+  ).padStart(
+    2,
+    "0",
+  );
 
   const day = String(
     date.getDate(),
-  ).padStart(2, "0");
+  ).padStart(
+    2,
+    "0",
+  );
 
   return `${year}-${month}-${day}`;
 }
 
 export function DataControls() {
-  const { t } =
-    useLanguage();
+  const {
+    t,
+  } = useLanguage();
 
   const fileInputRef =
     useRef<HTMLInputElement>(
@@ -49,7 +75,9 @@ export function DataControls() {
 
       const blob =
         new Blob(
-          [content],
+          [
+            content,
+          ],
           {
             type: "application/json;charset=utf-8",
           },
@@ -65,7 +93,8 @@ export function DataControls() {
           "a",
         );
 
-      anchor.href = url;
+      anchor.href =
+        url;
 
       anchor.download =
         `planora-backup-${getLocalDateKey()}.json`;
@@ -107,7 +136,6 @@ export function DataControls() {
     const file =
       event.target.files?.[0];
 
-    // Allow selecting the same file again later.
     event.target.value = "";
 
     if (!file) {
@@ -149,9 +177,12 @@ export function DataControls() {
         t.toast.dataImported,
       );
 
-      window.setTimeout(() => {
-        window.location.reload();
-      }, 700);
+      window.setTimeout(
+        () => {
+          window.location.reload();
+        },
+        700,
+      );
     } catch (error) {
       console.error(
         "Planora: failed to import data",
@@ -181,9 +212,12 @@ export function DataControls() {
         t.toast.dataReset,
       );
 
-      window.setTimeout(() => {
-        window.location.reload();
-      }, 700);
+      window.setTimeout(
+        () => {
+          window.location.reload();
+        },
+        700,
+      );
     } catch (error) {
       console.error(
         "Planora: failed to reset local data",
@@ -197,68 +231,148 @@ export function DataControls() {
   }
 
   return (
-    <div className="space-y-1.5">
-      <div className="flex items-center gap-1.5 px-1 text-[11px] text-muted-foreground">
-        <Download className="size-3.5" />
-
-        <span>
-          {t.sidebar.localData}
-        </span>
-      </div>
-
-      <div className="grid gap-1.5">
-        {/* Export */}
-        <Button
+    <Dialog>
+      <DialogTrigger
+        asChild
+      >
+        <button
           type="button"
-          variant="outline"
-          onClick={
-            handleExport
-          }
-          className="h-9 w-full justify-start px-2.5 text-xs font-normal"
+          className="flex h-9 w-full items-center justify-between rounded-md px-2 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         >
-          <Download className="size-3.5" />
+          <span className="flex items-center gap-2">
+            <DatabaseBackup className="size-3.5" />
 
-          {t.sidebar.exportData}
-        </Button>
+            {
+              t.sidebar
+                .dataBackup
+            }
+          </span>
 
-        {/* Import */}
-        <Button
-          type="button"
-          variant="outline"
-          onClick={
-            handleImportClick
+          <ChevronRight className="size-3.5 opacity-60" />
+        </button>
+      </DialogTrigger>
+
+      <DialogContent className="w-[calc(100%-2rem)] max-w-md overflow-hidden">
+        <DialogHeader>
+          <DialogTitle>
+            {
+              t.sidebar
+                .dataBackup
+            }
+          </DialogTitle>
+
+          <DialogDescription className="leading-relaxed">
+            {
+              t.sidebar
+                .dataBackupDescription
+            }
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid min-w-0 gap-2 pt-2">
+          {/* Export */}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={
+              handleExport
+            }
+            className="h-auto w-full min-w-0 justify-start gap-3 whitespace-normal px-3 py-3 text-left font-normal"
+          >
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-secondary">
+              <Download className="size-4" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium">
+                {
+                  t.sidebar
+                    .exportData
+                }
+              </p>
+
+              <p className="mt-0.5 whitespace-normal break-words text-xs leading-relaxed text-muted-foreground">
+                {
+                  t.sidebar
+                    .exportDataDescription
+                }
+              </p>
+            </div>
+          </Button>
+
+          {/* Import */}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={
+              handleImportClick
+            }
+            className="h-auto w-full min-w-0 justify-start gap-3 whitespace-normal px-3 py-3 text-left font-normal"
+          >
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-secondary">
+              <Upload className="size-4" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium">
+                {
+                  t.sidebar
+                    .importData
+                }
+              </p>
+
+              <p className="mt-0.5 whitespace-normal break-words text-xs leading-relaxed text-muted-foreground">
+                {
+                  t.sidebar
+                    .importDataDescription
+                }
+              </p>
+            </div>
+          </Button>
+
+          {/* Reset */}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={
+              handleReset
+            }
+            className="h-auto w-full min-w-0 justify-start gap-3 whitespace-normal px-3 py-3 text-left font-normal text-destructive hover:bg-destructive/10 hover:text-destructive"
+          >
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-destructive/10">
+              <Trash2 className="size-4" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium">
+                {
+                  t.sidebar
+                    .resetData
+                }
+              </p>
+
+              <p className="mt-0.5 whitespace-normal break-words text-xs leading-relaxed text-muted-foreground">
+                {
+                  t.sidebar
+                    .resetDataDescription
+                }
+              </p>
+            </div>
+          </Button>
+        </div>
+
+        <input
+          ref={
+            fileInputRef
           }
-          className="h-9 w-full justify-start px-2.5 text-xs font-normal"
-        >
-          <Upload className="size-3.5" />
-
-          {t.sidebar.importData}
-        </Button>
-
-        {/* Reset */}
-        <Button
-          type="button"
-          variant="outline"
-          onClick={
-            handleReset
+          type="file"
+          accept=".json,application/json"
+          onChange={
+            handleImportFile
           }
-          className="h-9 w-full justify-start px-2.5 text-xs font-normal text-destructive hover:bg-destructive/10 hover:text-destructive"
-        >
-          <Trash2 className="size-3.5" />
-
-          {t.sidebar.resetData}
-        </Button>
-      </div>
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".json,application/json"
-        onChange={
-          handleImportFile
-        }
-        className="hidden"
-      />
-    </div>
+          className="hidden"
+        />
+      </DialogContent>
+    </Dialog>
   );
 }
