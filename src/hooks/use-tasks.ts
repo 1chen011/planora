@@ -8,9 +8,13 @@ import {
 } from "react";
 
 import {
-  genId,
-  taskStorage,
-} from "@/lib/storage";
+  createTask as createTaskInCloud,
+  deleteTask as deleteTaskFromCloud,
+  loadTasks,
+  updateTask as updateTaskInCloud,
+  updateTaskCompletion,
+  updateTaskPlannedDate,
+} from "@/lib/task-repository";
 
 import type {
   Task,
@@ -35,33 +39,6 @@ function getLocalDateKey(
   return `${year}-${month}-${day}`;
 }
 
-function normalizeTask(
-  task: Task,
-): Task {
-  return {
-    ...task,
-
-    plannedDate:
-      typeof task.plannedDate ===
-      "string"
-        ? task.plannedDate
-        : "",
-
-    completedAt:
-      typeof task.completedAt ===
-      "string"
-        ? task.completedAt
-        : null,
-
-    priority:
-      task.priority === "high" ||
-      task.priority === "low" ||
-      task.priority === "medium"
-        ? task.priority
-        : "medium",
-  };
-}
-
 export function useTasks() {
   const [
     tasks,
@@ -73,62 +50,65 @@ export function useTasks() {
     setHydrated,
   ] = useState(false);
 
+  /**
+   * Load tasks from Supabase
+   * when the workspace mounts.
+   */
   useEffect(() => {
-    const storedTasks =
-      taskStorage.load();
+    let cancelled = false;
 
-    setTasks(
-      storedTasks.map(
-        normalizeTask,
-      ),
-    );
+    async function hydrateTasks() {
+      try {
+        const cloudTasks =
+          await loadTasks();
 
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) {
-      return;
+        if (!cancelled) {
+          setTasks(
+            cloudTasks,
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Planora: failed to load tasks from Supabase",
+          error,
+        );
+      } finally {
+        if (!cancelled) {
+          setHydrated(true);
+        }
+      }
     }
 
-    taskStorage.save(tasks);
-  }, [
-    tasks,
-    hydrated,
-  ]);
+    void hydrateTasks();
 
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /**
+   * Create a task in Supabase,
+   * then add the returned row
+   * to local React state.
+   */
   const addTask =
     useCallback(
-      (
+      async (
         values: TaskFormValues,
         options?: {
           addToToday?: boolean;
         },
       ) => {
-        const task: Task = {
-          id: genId("task"),
+        const plannedDate =
+          options?.addToToday
+            ? getLocalDateKey()
+            : "";
 
-          ...values,
-
-          /**
-           * Priority remains in the data model
-           * for backward compatibility, but is
-           * no longer a required user decision.
-           */
-          priority: "medium",
-
-          completed: false,
-
-          completedAt: null,
-
-          createdAt:
-            new Date().toISOString(),
-
-          plannedDate:
-            options?.addToToday
-              ? getLocalDateKey()
-              : "",
-        };
+        const task =
+          await createTaskInCloud(
+            values,
+            plannedDate,
+          );
 
         setTasks((prev) => [
           task,
@@ -140,38 +120,49 @@ export function useTasks() {
       [],
     );
 
+  /**
+   * Update editable task fields
+   * in Supabase.
+   */
   const updateTask =
     useCallback(
-      (
+      async (
         id: string,
         values: TaskFormValues,
       ) => {
+        const updatedTask =
+          await updateTaskInCloud(
+            id,
+            values,
+          );
+
         setTasks((prev) =>
           prev.map(
             (task) =>
               task.id === id
-                ? {
-                    ...task,
-
-                    /**
-                     * Only form-editable fields
-                     * are updated here.
-                     *
-                     * Existing priority remains
-                     * untouched.
-                     */
-                    ...values,
-                  }
+                ? updatedTask
                 : task,
           ),
         );
+
+        return updatedTask;
       },
       [],
     );
 
+  /**
+   * Delete from Supabase first,
+   * then remove from local state.
+   */
   const deleteTask =
     useCallback(
-      (id: string) => {
+      async (
+        id: string,
+      ) => {
+        await deleteTaskFromCloud(
+          id,
+        );
+
         setTasks((prev) =>
           prev.filter(
             (task) =>
@@ -182,66 +173,97 @@ export function useTasks() {
       [],
     );
 
+  /**
+   * Complete / reopen a task.
+   */
   const toggleComplete =
     useCallback(
-      (id: string) => {
-        setTasks((prev) =>
-          prev.map((task) => {
-            if (
-              task.id !== id
-            ) {
-              return task;
-            }
+      async (
+        id: string,
+      ) => {
+        const task =
+          tasks.find(
+            (item) =>
+              item.id === id,
+          );
 
-            const nextCompleted =
-              !task.completed;
+        if (!task) {
+          return;
+        }
 
-            return {
-              ...task,
-
-              completed:
-                nextCompleted,
-
-              completedAt:
-                nextCompleted
-                  ? new Date().toISOString()
-                  : null,
-            };
-          }),
-        );
-      },
-      [],
-    );
-
-  const toggleToday =
-    useCallback(
-      (id: string) => {
-        const today =
-          getLocalDateKey();
+        const updatedTask =
+          await updateTaskCompletion(
+            id,
+            !task.completed,
+          );
 
         setTasks((prev) =>
           prev.map(
-            (task) =>
-              task.id === id
-                ? {
-                    ...task,
-
-                    plannedDate:
-                      task.plannedDate ===
-                      today
-                        ? ""
-                        : today,
-                  }
-                : task,
+            (item) =>
+              item.id === id
+                ? updatedTask
+                : item,
           ),
         );
+
+        return updatedTask;
       },
-      [],
+      [tasks],
+    );
+
+  /**
+   * Add / remove a task
+   * from Today.
+   */
+  const toggleToday =
+    useCallback(
+      async (
+        id: string,
+      ) => {
+        const task =
+          tasks.find(
+            (item) =>
+              item.id === id,
+          );
+
+        if (!task) {
+          return;
+        }
+
+        const today =
+          getLocalDateKey();
+
+        const nextPlannedDate =
+          task.plannedDate ===
+          today
+            ? ""
+            : today;
+
+        const updatedTask =
+          await updateTaskPlannedDate(
+            id,
+            nextPlannedDate,
+          );
+
+        setTasks((prev) =>
+          prev.map(
+            (item) =>
+              item.id === id
+                ? updatedTask
+                : item,
+          ),
+        );
+
+        return updatedTask;
+      },
+      [tasks],
     );
 
   const getTask =
     useCallback(
-      (id: string | null) =>
+      (
+        id: string | null,
+      ) =>
         id
           ? tasks.find(
               (task) =>
@@ -264,7 +286,8 @@ export function useTasks() {
             !task.completed,
         ).length,
 
-        all: tasks.length,
+        all:
+          tasks.length,
 
         active:
           tasks.filter(
@@ -289,30 +312,34 @@ export function useTasks() {
           getLocalDateKey();
 
         /**
-         * Keep sorting simple:
-         * active work first, then newest first.
-         *
-         * Priority no longer influences task order.
+         * Active work first,
+         * then newest first.
          */
         const sorted = [
           ...tasks,
-        ].sort((a, b) => {
-          if (
-            a.completed !==
-            b.completed
-          ) {
-            return a.completed
-              ? 1
-              : -1;
-          }
+        ].sort(
+          (
+            a,
+            b,
+          ) => {
+            if (
+              a.completed !==
+              b.completed
+            ) {
+              return a.completed
+                ? 1
+                : -1;
+            }
 
-          return b.createdAt.localeCompare(
-            a.createdAt,
-          );
-        });
+            return b.createdAt.localeCompare(
+              a.createdAt,
+            );
+          },
+        );
 
         if (
-          filter === "today"
+          filter ===
+          "today"
         ) {
           return sorted.filter(
             (task) =>
@@ -323,7 +350,8 @@ export function useTasks() {
         }
 
         if (
-          filter === "active"
+          filter ===
+          "active"
         ) {
           return sorted.filter(
             (task) =>
