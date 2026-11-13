@@ -1,4 +1,7 @@
-export type Priority = "low" | "medium" | "high";
+export type Priority =
+  | "low"
+  | "medium"
+  | "high";
 
 export type Task = {
   id: string;
@@ -39,18 +42,39 @@ export type Task = {
   plannedDate: string;
 };
 
-export type TaskFormValues = Pick<Task, "title" | "note" | "deadline">;
+export type TaskFormValues =
+  Pick<
+    Task,
+    | "title"
+    | "note"
+    | "deadline"
+  >;
 
-export type TaskFilter = "today" | "all" | "active" | "completed";
+export type TaskFilter =
+  | "today"
+  | "all"
+  | "active"
+  | "completed";
 
-export type AppView = "home" | TaskFilter;
+export type AppView =
+  | "home"
+  | TaskFilter;
 
-export type PomodoroPhase = "focus" | "break";
+export type PomodoroPhase =
+  | "focus"
+  | "break";
 
 export type PomodoroSession = {
   id: string;
 
-  taskId: string;
+  /**
+   * A session may outlive its original task.
+   *
+   * When a task is deleted in Supabase,
+   * focus_sessions.task_id becomes NULL
+   * while taskTitle is preserved for history.
+   */
+  taskId: string | null;
 
   taskTitle: string;
 
